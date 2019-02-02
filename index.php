@@ -44,6 +44,10 @@ $adds = [
     ]
 ];
 
+/**
+ * @param $price входная цена для форматирования
+ * @return string
+ */
 function formatPrice ($price) {
     $price = number_format(ceil($price), 0, '.', ' ');
 
