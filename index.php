@@ -1,5 +1,11 @@
 <?php
 
+date_default_timezone_set('Etc/GMT-3');
+
+$nowTime = new DateTime('now');
+$tomorTime = new DateTime('tomorrow');
+$timeLaps = $nowTime->diff($tomorTime)->format('%H:%i');
+
 require ('functions.php');
 
 $is_auth = rand(0, 1);
@@ -62,7 +68,8 @@ function formatPrice($price)
 
 $contents = include_template('index.php', [
     'submenu' => $submenu,
-    'adds' => $adds
+    'adds' => $adds,
+    'timeLaps' => $timeLaps
 ]);
 
 $html = include_template('layout.php', [

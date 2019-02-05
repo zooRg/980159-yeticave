@@ -31,11 +31,11 @@
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost">
-                                цена <?php echo htmlspecialchars(formatPrice($lot['PRICE'])); ?><b class="rub">р</b>
+                                цена <?php echo htmlspecialchars(formatPrice($lot['PRICE'])); ?>
                             </span>
                         </div>
                         <div class="lot__timer timer">
-                            12:23
+                            <?php echo $timeLaps; ?>
                         </div>
                     </div>
                 </div>
