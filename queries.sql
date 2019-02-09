@@ -1,4 +1,8 @@
---Добавляем категории в таблицу
+/* Переименовываем Поле в таблице для четкого понимания что это */
+ALTER TABLE yeticave.lot
+CHANGE COLUMN user_id vinner_id INT(11);
+
+/* Добавляем категории в таблицу */
 INSERT INTO yeticave.category
   (name)
 VALUES
@@ -11,7 +15,7 @@ VALUES
 
 
 
---Добавляем пользователей
+/* Добавляем пользователей */
 INSERT INTO yeticave.users
   (data_registr, email, name, password, avatar, contacts, create_lot_id, bets_id)
 VALUES
@@ -19,9 +23,9 @@ VALUES
   (CURRENT_TIMESTAMP, 'switty@mail.ru', 'switty', '123123', '', '+7(111) 111-11-11', '2', '2');
 
 
---Добавляем лоты
+/* Добавляем лоты */
 INSERT INTO yeticave.lot
-	(data_add, name, description, img, start_price, date_end, step, autor_id, vinner_id, category_id)
+	(data_add, name, description, img, start_price, date_end, step, autor_id, user_id, category_id)
 VALUES
     (
         CURRENT_TIMESTAMP - INTERVAL 1 hour,
@@ -92,7 +96,7 @@ VALUES
     );
 
 
---Добавляем ставки
+/* Добавляем ставки */
 INSERT INTO yeticave.bets
 	(data_add, sum_price, autor_id, lot_id)
 VALUES
@@ -103,7 +107,7 @@ VALUES
 
 SELECT * from yeticave.category;
 
---Получаем самы
+/* Получаем самы */
 SELECT y.name, y.start_price, y.img, y.step, y.category_id
 FROM yeticave.lot y
 JOIN category c
@@ -112,19 +116,19 @@ WHERE y.data_add < y.date_end
 ORDER BY y.data_add DESC
 LIMIT 3;
 
---Получаем лот по его айди и выводим название раздела к какому привязан лот
+/* Получаем лот по его айди и выводим название раздела к какому привязан лот */
 SELECT c.name
 FROM yeticave.lot y
 JOIN category c
 ON y.category_id = c.id
 WHERE y.category_id = 2;
 
---Получаем лот по айди и меняем название
+/* Получаем лот по айди и меняем название */
 UPDATE yeticave.lot
 SET name = '2014 Rossignol District Snowboard'
 WHERE id = 2;
 
---Получем ставки по айди лота и отсортировав по дате добавления
+/* Получем ставки по айди лота и отсортировав по дате добавления */
 SELECT b.sum_price, name
 FROM yeticave.bets b
 JOIN yeticave.lot y
