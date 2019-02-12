@@ -25,7 +25,7 @@ VALUES
 
 /* Добавляем лоты */
 INSERT INTO yeticave.lot
-	(data_add, name, description, img, start_price, date_end, step, autor_id, user_id, category_id)
+	(data_add, name, description, img, start_price, date_end, step, autor_id, vinner_id, category_id)
 VALUES
     (
         CURRENT_TIMESTAMP - INTERVAL 1 hour,
