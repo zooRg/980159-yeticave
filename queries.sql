@@ -108,7 +108,7 @@ VALUES
 SELECT * from yeticave.category;
 
 /* Получаем самы */
-SELECT y.name, y.start_price, y.img, y.step, y.category_id
+SELECT y.name, y.start_price, y.img, y.step, c.name AS cat_name
 FROM yeticave.lot y
 JOIN category c
 ON y.category_id = c.id
