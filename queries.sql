@@ -25,7 +25,7 @@ VALUES
 
 /* Добавляем лоты */
 INSERT INTO yeticave.lot
-	(data_add, name, description, img, start_price, date_end, step, autor_id, user_id, category_id)
+	(data_add, name, description, img, start_price, date_end, step, autor_id, vinner_id, category_id)
 VALUES
     (
         CURRENT_TIMESTAMP - INTERVAL 1 hour,
@@ -108,7 +108,7 @@ VALUES
 SELECT * from yeticave.category;
 
 /* Получаем самы */
-SELECT y.name, y.start_price, y.img, y.step, y.category_id
+SELECT y.name, y.start_price, y.img, y.step, c.name AS cat_name
 FROM yeticave.lot y
 JOIN category c
 ON y.category_id = c.id

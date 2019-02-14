@@ -53,7 +53,7 @@
             <!--заполните этот список из массива категорий-->
             <?php foreach ($submenu as $menu): ?>
                 <li class="nav__item">
-                    <a href="pages/all-lots.html"><?php echo $menu; ?></a>
+                    <a href="pages/all-lots.html"><?php echo htmlspecialchars($menu['name']); ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>

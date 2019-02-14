@@ -1,57 +1,41 @@
 <?php
 
-date_default_timezone_set('Etc/GMT-3');
+require_once ('functions.php');
+$db = require_once ('init.php');
 
-$nowTime = new DateTime('now');
-$tomorTime = new DateTime('tomorrow');
-$timeLaps = $nowTime->diff($tomorTime)->format('%H:%i');
+$conn = mysqli_connect($db['SERVER'], $db['DBUSERNAME'], $db['PASS'], $db['DBNAME']);
+mysqli_set_charset($conn, "utf8");
 
-require ('functions.php');
+$submenu = '';
+$adds = '';
 
-$is_auth = rand(0, 1);
+if (!$conn) {
+    $error = mysqli_connect_error();
+    print ($error);
+    die();
+}
+else {
+    $sqlCat = 'SELECT `name` AS name FROM category';
+    $sqlLots = 'SELECT y.name AS NAME, y.start_price AS PRICE, y.img AS PICTURE, c.name AS CATEGORY'
+        . ' FROM lot y'
+        . ' JOIN category c'
+        . ' ON y.category_id = c.id'
+        . ' WHERE y.data_add < y.date_end'
+        . ' ORDER BY y.data_add DESC'
+        . ' LIMIT 9';
+    $resultCat = mysqli_query($conn, $sqlCat);
+    $resultLot = mysqli_query($conn, $sqlLots);
 
-$user_name = 'Никита'; // укажите здесь ваше имя
-
-$submenu = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
-
-$adds = [
-    [
-        'NAME'     => '2014 Rossignol District Snowboard',
-        'CATEGORY' => 'Доски и лыжи',
-        'PRICE'    => '10999',
-        'PICTURE'  => 'img/lot-1.jpg'
-    ],
-    [
-        'NAME'     => 'DC Ply Mens 2016/2017 Snowboard',
-        'CATEGORY' => 'Доски и лыжи',
-        'PRICE'    => '159999',
-        'PICTURE'  => 'img/lot-2.jpg'
-    ],
-    [
-        'NAME'     => 'Крепления Union Contact Pro 2015 года размер L/XL',
-        'CATEGORY' => 'Крепления',
-        'PRICE'    => '8000',
-        'PICTURE'  => 'img/lot-3.jpg'
-    ],
-    [
-        'NAME'     => 'Ботинки для сноуборда DC Mutiny Charocal',
-        'CATEGORY' => 'Ботинки',
-        'PRICE'    => '10999',
-        'PICTURE'  => 'img/lot-4.jpg'
-    ],
-    [
-        'NAME'     => 'Куртка для сноуборда DC Mutiny Charocal',
-        'CATEGORY' => 'Одежда',
-        'PRICE'    => '7500',
-        'PICTURE'  => 'img/lot-5.jpg'
-    ],
-    [
-        'NAME'     => 'Маска Oakley Canopy',
-        'CATEGORY' => 'Разное',
-        'PRICE'    => '5400',
-        'PICTURE'  => 'img/lot-6.jpg'
-    ]
-];
+    if ($resultCat && $resultLot) {
+        $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
+        $adds = mysqli_fetch_all($resultLot, MYSQLI_ASSOC);
+    }
+    else {
+        $error = mysqli_error($conn);
+        print ($error);
+        die();
+    }
+}
 
 /**
  * @param $price входная цена для форматирования

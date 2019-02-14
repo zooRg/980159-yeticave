@@ -6,7 +6,7 @@
         <!--заполните этот список из массива категорий-->
         <?php foreach ($submenu as $menu): ?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html"><?php echo htmlspecialchars($menu); ?></a>
+                <a class="promo__link" href="pages/all-lots.html"><?php echo htmlspecialchars($menu['name']); ?></a>
             </li>
         <?php endforeach; ?>
     </ul>
@@ -23,7 +23,7 @@
                     <img src="<?php echo htmlspecialchars($lot['PICTURE']); ?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"><?php echo $lot['CATEGORY']; ?></span>
+                    <span class="lot__category"><?php echo htmlspecialchars($lot['CATEGORY']); ?></span>
                     <h3 class="lot__title">
                         <a class="text-link" href="pages/lot.html"><?php echo htmlspecialchars($lot['NAME']); ?></a>
                     </h3>
