@@ -1,44 +1,44 @@
-CREATE DATABASE yeticave
+CREATE DATABASE yeticave2
   character set utf8
   collate utf8_general_ci;
 
-USE yeticave;
+USE yeticave2;
 
 CREATE TABLE category (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
   name char(255)
 );
 
 CREATE TABLE lot (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
   data_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name CHAR(128) NOT NULL UNIQUE,
-  description CHAR(255),
-  img CHAR,
-  start_price CHAR,
+  description TEXT(10000),
+  img CHAR(255),
+  start_price INT(255),
   date_end TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  step CHAR,
-  autor_id INT,
-  user_id INT,
-  category_id INT
+  step INT(255),
+  autor_id INT(11),
+  vinner_id INT(11),
+  category_id INT(11)
 );
 
 CREATE TABLE bets (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
   data_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  sum_price CHAR,
-  autor_id INT,
-  lot_id INT
+  sum_price INT(11),
+  autor_id INT(11),
+  lot_id INT(11)
 );
 
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
   data_registr TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   email CHAR(128) NOT NULL UNIQUE,
   name CHAR(50),
   password CHAR(32) NOT NULL,
   avatar CHAR(70),
   contacts VARCHAR(30),
-  create_lot_id INT,
-  bets_id INT
+  create_lot_id INT(11),
+  bets_id INT(11)
 );
