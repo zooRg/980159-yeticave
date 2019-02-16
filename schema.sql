@@ -13,11 +13,11 @@ CREATE TABLE lot (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   data_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name CHAR(128) NOT NULL UNIQUE,
-  description TEXT(10000),
+  description TEXT,
   img CHAR(255),
-  start_price INT(255),
+  start_price FLOAT(11),
   date_end TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  step INT(255),
+  step FLOAT(11),
   autor_id INT(11),
   vinner_id INT(11),
   category_id INT(11)
@@ -26,7 +26,7 @@ CREATE TABLE lot (
 CREATE TABLE bets (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   data_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  sum_price INT(11),
+  sum_price FLOAT(11),
   autor_id INT(11),
   lot_id INT(11)
 );
