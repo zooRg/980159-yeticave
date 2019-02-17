@@ -6,29 +6,29 @@ USE yeticave;
 
 CREATE TABLE category (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name char(255)
+  name CHAR(50)
 );
 
 CREATE TABLE lot (
   id INT AUTO_INCREMENT PRIMARY KEY,
   data_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  name CHAR(128) NOT NULL UNIQUE,
-  description CHAR(255),
-  img CHAR,
-  start_price CHAR,
+  name CHAR(50) NOT NULL UNIQUE,
+  description TEXT,
+  img TEXT,
+  start_price FLOAT(11),
   date_end TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  step CHAR,
-  autor_id INT,
-  user_id INT,
-  category_id INT
+  step FLOAT(11),
+  autor_id INT(11),
+  user_id INT(11),
+  category_id INT(11)
 );
 
 CREATE TABLE bets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   data_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  sum_price CHAR,
-  autor_id INT,
-  lot_id INT
+  sum_price FLOAT(11),
+  autor_id INT(11),
+  lot_id INT(11)
 );
 
 CREATE TABLE users (
@@ -39,6 +39,6 @@ CREATE TABLE users (
   password CHAR(32) NOT NULL,
   avatar CHAR(70),
   contacts VARCHAR(30),
-  create_lot_id INT,
-  bets_id INT
+  create_lot_id INT(11),
+  bets_id INT(11)
 );

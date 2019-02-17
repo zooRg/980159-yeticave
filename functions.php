@@ -61,4 +61,56 @@ function db_insert ($link, $sql, $data = [])
     return $result;
 }
 
+/**
+ * @param $price входная цена для форматирования
+ * @return string
+ */
+function formatPrice($price)
+{
+    $price = number_format(ceil($price), 0, '.', ' ');
+
+    $price = $price . ' ₽';
+
+    return $price;
+}
+
+/**
+ * @param $time - unix_time
+ * @return string
+ */
+function time_format_laps($time) {
+    $month_name = [
+        1  => 'января',
+        2  => 'февраля',
+        3  => 'марта',
+        4  => 'апреля',
+        5  => 'мая',
+        6  => 'июня',
+        7  => 'июля',
+        8  => 'августа',
+        9  => 'сентября',
+        10 => 'октября',
+        11 => 'ноября',
+        12 => 'декабря'
+    ];
+
+    $month = $month_name[date('n', $time)];
+    $day = date('j', $time);
+    $year = date('Y', $time);
+    $hour = date('G', $time);
+    $min = date('i', $time);
+    $date = $day. ' '.$month. ' '.$year. ' г. в '.$hour. ':'.$min;
+    $dif = time() - $time;
+
+    if ($dif < 59) {
+        return $dif. " сек. назад";
+    } elseif($dif / 60 > 1and $dif / 60 < 59) {
+        return round($dif / 60). " мин. назад";
+    } elseif($dif / 3600 > 1and $dif / 3600 < 23) {
+        return round($dif / 3600). " час. назад";
+    }else{
+        return $date;
+    }
+}
+
 ?>
