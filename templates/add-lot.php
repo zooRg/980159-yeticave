@@ -50,54 +50,68 @@
                 <?php endforeach; ?>
             </ul>
         </nav>
-        <section class="lot-item container">
-            <h2><?php echo $title; ?></h2>
-            <div class="lot-item__content">
-                <div class="lot-item__left">
-                    <div class="lot-item__image">
-                        <img src="<?php echo $lot_img; ?>" width="730" height="548" alt="Сноуборд">
-                    </div>
-                    <p class="lot-item__category">Категория: <span><?php echo $category_name; ?></span></p>
-                    <p class="lot-item__description"><?php echo $category_desc; ?></p>
+
+        <form class="form form--add-lot container<?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?> form--invalid<?endif;?>" action="/add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
+            <h2>Добавление лота</h2>
+            <div class="form__container-two">
+                <div class="form__item<?php if (!isset($_POST['lot']['name'])): ?> form__item--invalid<?endif;?>"> <!-- form__item--invalid -->
+                    <label for="lot-name">Наименование</label>
+                    <input id="lot-name" type="text" name="lot[name]" placeholder="Введите наименование лота" required>
+                    <span class="form__error">Введите наименование лота</span>
                 </div>
-                <div class="lot-item__right">
-                    <div class="lot-item__state">
-                        <div class="lot-item__timer timer">
-                            <?php echo $timeLaps; ?>
-                        </div>
-                        <div class="lot-item__cost-state">
-                            <div class="lot-item__rate">
-                                <span class="lot-item__amount">Текущая цена</span>
-                                <span class="lot-item__cost"><?php echo $start_price; ?></span>
-                            </div>
-                            <div class="lot-item__min-cost">
-                                Мин. ставка <span><?php echo htmlspecialchars(formatPrice($step)); ?></span>
-                            </div>
-                        </div>
-                        <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post">
-                            <p class="lot-item__form-item form__item form__item--invalid">
-                                <label for="cost">Ваша ставка</label>
-                                <input id="cost" type="text" name="cost" placeholder="12 000">
-                                <span class="form__error">Введите наименование лота</span>
-                            </p>
-                            <button type="submit" class="button">Сделать ставку</button>
-                        </form>
-                    </div>
-                    <div class="history">
-                        <h3>История ставок (<span><?php echo count($users)?></span>)</h3>
-                        <table class="history__list">
-                            <?php foreach ($users as $user): ?>
-                                <tr class="history__item">
-                                    <td class="history__name"><?php echo htmlspecialchars($user['name']); ?></td>
-                                    <td class="history__price"><?php echo htmlspecialchars(formatPrice($user['sum_price'])); ?></td>
-                                    <td class="history__time"><?php echo htmlspecialchars(time_format_laps(strtotime($user['data_add']))); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </table>
-                    </div>
+                <div class="form__item<?php if (!isset($_POST['lot']['category'])): ?> form__item--invalid<?endif;?>">
+                    <label for="category">Категория</label>
+                    <select id="category" name="lot[category]" required>
+                        <option>Выберите категорию</option>
+                        <?php foreach ($submenu as $menu): ?>
+                            <option value="<?php echo $menu['id']; ?>"><?php echo htmlspecialchars($menu['name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <span class="form__error">Выберите категорию</span>
                 </div>
             </div>
-        </section>
+            <div class="form__item form__item--wide<?php if (!isset($_POST['lot']['message'])): ?> form__item--invalid<?endif;?>">
+                <label for="message">Описание</label>
+                <textarea id="message" name="lot[message]" placeholder="Напишите описание лота" required></textarea>
+                <span class="form__error">Напишите описание лота</span>
+            </div>
+            <div class="form__item form__item--file<?php if (!isset($_POST['lot']['path'])): ?> form__item--invalid<?endif;?>"> <!-- form__item--uploaded -->
+                <label>Изображение</label>
+                <div class="preview">
+                    <button class="preview__remove" type="button">x</button>
+                    <div class="preview__img">
+                        <img src="img/avatar.jpg" width="113" height="113" alt="Изображение лота">
+                    </div>
+                </div>
+                <div class="form__input-file">
+                    <input class="visually-hidden" type="file" id="photo2" value="" name="lot[photo]" required>
+                    <label for="photo2">
+                        <span>+ Добавить</span>
+                    </label>
+                    <span class="form__error">Добавьте фотографию</span>
+                </div>
+            </div>
+            <div class="form__container-three">
+                <div class="form__item form__item--small<?php if (!isset($_POST['lot']['startPrice'])): ?> form__item--invalid<?endif;?>">
+                    <label for="lot-rate">Начальная цена</label>
+                    <input id="lot-rate" type="number" name="lot[startPrice]" placeholder="0" required>
+                    <span class="form__error">Введите начальную цену</span>
+                </div>
+                <div class="form__item form__item--small<?php if (!isset($_POST['lot']['step'])): ?> form__item--invalid<?endif;?>">
+                    <label for="lot-step">Шаг ставки</label>
+                    <input id="lot-step" type="number" name="lot[step]" placeholder="0" required>
+                    <span class="form__error">Введите шаг ставки</span>
+                </div>
+                <div class="form__item<?php if (!isset($_POST['lot']['dateEnd'])): ?> form__item--invalid<?endif;?>">
+                    <label for="lot-date">Дата окончания торгов</label>
+                    <input class="form__input-date" id="lot-date" type="date" name="lot[dateEnd]" required>
+                    <span class="form__error">Введите дату завершения торгов</span>
+                </div>
+            </div>
+            <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
+            <button type="submit" class="button">Добавить лот</button>
+        </form>
+
     </main>
 
 </div>
