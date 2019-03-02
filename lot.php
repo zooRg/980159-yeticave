@@ -1,5 +1,4 @@
 <?php
-
 require_once('functions.php');
 $db = require_once('init.php');
 
@@ -52,28 +51,32 @@ if (!$conn) {
         print ($error);
         die();
     }
+
+    if (empty($lots)) {
+        http_response_code(404);
+        print ('Страница не найдена');
+        die();
+    }
+
+    $contents = include_template('lot.php', [
+        'timeLaps'      => $timeLaps,
+        'category_name' => $lots['CATEGORY_NAME'],
+        'category_desc' => $lots['description'],
+        'start_price'   => $lots['start_price'],
+        'step'          => $lots['step'],
+        'lot_img'       => $lots['img'],
+        'users'         => $users
+    ]);
+
+    $html = include_template('layout.php', [
+        'is_auth'    => $is_auth,
+        'user_name'  => $user_name,
+        'title'      => $lots['name'],
+        'submenu'    => $submenu,
+        'index_page' => 'non',
+        'contents'   => $contents
+    ]);
 }
-
-if (empty($lots)) {
-    http_response_code(404);
-    print ('Страница не найдена');
-    die();
-}
-
-
-$html = include_template('lot.php', [
-    'is_auth'       => $is_auth,
-    'user_name'     => $user_name,
-    'title'         => $lots['name'],
-    'submenu'       => $submenu,
-    'timeLaps'      => $timeLaps,
-    'category_name' => $lots['CATEGORY_NAME'],
-    'category_desc' => $lots['description'],
-    'start_price'   => $lots['start_price'],
-    'step'          => $lots['step'],
-    'lot_img'       => $lots['img'],
-    'users'         => $users
-]);
 
 print($html);
 

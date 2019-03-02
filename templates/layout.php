@@ -32,10 +32,10 @@
                 <?php else: ?>
                     <ul class="user-menu__list">
                         <li class="user-menu__item">
-                            <a href="#">Регистрация</a>
+                            <a href="/sign_up.php">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
-                            <a href="#">Вход</a>
+                            <a href="/sign_in.php">Вход</a>
                         </li>
                     </ul>
                 <?php endif; ?>
@@ -44,7 +44,19 @@
         </div>
     </header>
 
-    <main class="container"><?php echo $contents; ?></main>
+    <?php if($index_page):?>
+        <nav class="nav">
+            <ul class="nav__list container">
+                <?php foreach ($submenu as $menu): ?>
+                    <li class="nav__item">
+                        <a href="all-lots.html"><?php echo htmlspecialchars($menu['name']); ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </nav>
+    <?endif;?>
+
+    <main<?php if(!$index_page):?> class="container"<?endif;?>><?php echo $contents; ?></main>
 </div>
 
 <footer class="main-footer">

@@ -25,7 +25,7 @@ if (!$conn) {
         die();
     }
 
-    $html = include_template('add-lot.php', [
+    $contents = include_template('add-lot.php', [
         'is_auth'       => $is_auth,
         'user_name'     => $user_name,
         'submenu'       => $submenu
@@ -68,6 +68,15 @@ if (!$conn) {
         }
 
     }
+
+    $html = include_template('layout.php', [
+        'is_auth'    => $is_auth,
+        'user_name'  => $user_name,
+        'title'      => $lots['name'],
+        'submenu'    => $submenu,
+        'index_page' => 'non',
+        'contents'   => $contents
+    ]);
 }
 
 print($html);
