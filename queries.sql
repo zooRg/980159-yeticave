@@ -1,9 +1,9 @@
 /* Переименовываем Поле в таблице для четкого понимания что это */
-ALTER TABLE yeticave.lot
-CHANGE COLUMN user_id vinner_id INT(11);
+--ALTER TABLE yeticave2.lot
+--CHANGE COLUMN user_id vinner_id INT(11);
 
 /* Добавляем категории в таблицу */
-INSERT INTO yeticave.category
+INSERT INTO yeticave2.category
   (name)
 VALUES
   ('Доски и лыжи'),
@@ -16,7 +16,7 @@ VALUES
 
 
 /* Добавляем пользователей */
-INSERT INTO yeticave.users
+INSERT INTO yeticave2.users
   (data_registr, email, name, password, avatar, contacts, create_lot_id, bets_id)
 VALUES
   (CURRENT_TIMESTAMP, 'turbo@mail.ru', 'turbo', '123123', '', '+7(999) 999-99-99', '1', '1'),
@@ -24,7 +24,7 @@ VALUES
 
 
 /* Добавляем лоты */
-INSERT INTO yeticave.lot
+INSERT INTO yeticave2.lot
 	(data_add, name, description, img, start_price, date_end, step, autor_id, vinner_id, category_id)
 VALUES
     (
@@ -97,7 +97,7 @@ VALUES
 
 
 /* Добавляем ставки */
-INSERT INTO yeticave.bets
+INSERT INTO yeticave2.bets
 	(data_add, sum_price, autor_id, lot_id)
 VALUES
     (CURRENT_TIMESTAMP - INTERVAL 4 HOUR, '2000', 1, 1),
@@ -105,11 +105,11 @@ VALUES
     (CURRENT_TIMESTAMP - INTERVAL 1 HOUR, '500', 2, 3),
     (CURRENT_TIMESTAMP - INTERVAL 2 HOUR, '500', 2, 3);
 
-SELECT * from yeticave.category;
+SELECT * from yeticave2.category;
 
 /* Получаем самы */
 SELECT y.name, y.start_price, y.img, y.step, c.name AS cat_name
-FROM yeticave.lot y
+FROM yeticave2.lot y
 JOIN category c
 ON y.category_id = c.id
 WHERE y.data_add < y.date_end
@@ -118,27 +118,27 @@ LIMIT 3;
 
 /* Получаем лот по его айди и выводим название раздела к какому привязан лот */
 SELECT c.name
-FROM yeticave.lot y
+FROM yeticave2.lot y
 JOIN category c
 ON y.category_id = c.id
 WHERE y.category_id = 2;
 
 /* Получаем лот по айди и меняем название */
-UPDATE yeticave.lot
+UPDATE yeticave2.lot
 SET name = '2014 Rossignol District Snowboard'
-WHERE id = 2;
+WHERE id = 1;
 
 /* Получем ставки по айди лота и отсортировав по дате добавления */
 SELECT b.sum_price, name
-FROM yeticave.bets b
-JOIN yeticave.lot y
+FROM yeticave2.bets b
+JOIN yeticave2.lot y
 ON b.lot_id = y.id
 WHERE b.lot_id = 3
 ORDER BY b.data_add DESC;
 
 SELECT SUM(b.sum_price), name
-FROM yeticave.bets b
-JOIN yeticave.lot y
+FROM yeticave2.bets b
+JOIN yeticave2.lot y
 ON b.lot_id = y.id
 WHERE b.lot_id = 3
 ORDER BY b.data_add DESC;
