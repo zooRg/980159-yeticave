@@ -8,6 +8,7 @@ mysqli_set_charset($conn, "utf8");
 
 $submenu = '';
 $adds = '';
+$lotID = [];
 
 if (!$conn) {
     $error = mysqli_connect_error();
@@ -16,7 +17,7 @@ if (!$conn) {
 }
 else {
     $sqlCat = 'SELECT `name` AS name FROM category';
-    $sqlLots = 'SELECT y.name AS NAME, y.start_price AS PRICE, y.img AS PICTURE, c.name AS CATEGORY'
+    $sqlLots = 'SELECT y.name AS NAME, y.start_price AS PRICE, y.img AS PICTURE, c.name AS CATEGORY, y.id AS ID'
         . ' FROM lot y'
         . ' JOIN category c'
         . ' ON y.category_id = c.id'
@@ -37,23 +38,11 @@ else {
     }
 }
 
-/**
- * @param $price входная цена для форматирования
- * @return string
- */
-function formatPrice($price)
-{
-    $price = number_format(ceil($price), 0, '.', ' ');
-
-    $price = $price . ' ₽';
-
-    return $price;
-}
-
 $contents = include_template('index.php', [
     'submenu' => $submenu,
     'adds' => $adds,
-    'timeLaps' => $timeLaps
+    'timeLaps' => $timeLaps,
+    'url' => '/lot.php'
 ]);
 
 $html = include_template('layout.php', [

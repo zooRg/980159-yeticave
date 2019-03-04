@@ -13,14 +13,14 @@
     <header class="main-header">
         <div class="main-header__container container">
             <h1 class="visually-hidden">YetiCave</h1>
-            <a class="main-header__logo">
+            <a class="main-header__logo" href="/">
                 <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
             </a>
             <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru">
                 <input type="search" name="search" placeholder="Поиск лота">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <a class="main-header__add-lot button" href="pages/add-lot.html">Добавить лот</a>
+            <a class="main-header__add-lot button" href="/add.php">Добавить лот</a>
 
             <nav class="user-menu">
 
@@ -32,10 +32,10 @@
                 <?php else: ?>
                     <ul class="user-menu__list">
                         <li class="user-menu__item">
-                            <a href="#">Регистрация</a>
+                            <a href="/sign_up.php">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
-                            <a href="#">Вход</a>
+                            <a href="/sign_in.php">Вход</a>
                         </li>
                     </ul>
                 <?php endif; ?>
@@ -44,7 +44,19 @@
         </div>
     </header>
 
-    <main class="container"><?php echo $contents; ?></main>
+    <?php if($index_page):?>
+        <nav class="nav">
+            <ul class="nav__list container">
+                <?php foreach ($submenu as $menu): ?>
+                    <li class="nav__item">
+                        <a href="all-lots.html"><?php echo htmlspecialchars($menu['name']); ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </nav>
+    <?endif;?>
+
+    <main<?php if(!$index_page):?> class="container"<?endif;?>><?php echo $contents; ?></main>
 </div>
 
 <footer class="main-footer">
@@ -101,7 +113,7 @@
                 </svg>
             </a>
         </div>
-        <a class="main-footer__add-lot button" href="add-lot.html">Добавить лот</a>
+        <a class="main-footer__add-lot button" href="/add.php">Добавить лот</a>
         <div class="main-footer__developed-by">
             <span class="visually-hidden">Разработано:</span>
             <a class="logo-academy" href="https://htmlacademy.ru/intensive/php">
