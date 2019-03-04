@@ -26,7 +26,7 @@ if (!$conn) {
         die();
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && !count($errors)) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $sign = $_POST['registr'];
         $errors = [];
@@ -39,7 +39,9 @@ if (!$conn) {
             }
         }
 
-        if(empty($errors)) {
+        $email = filter_var($sign['email'], FILTER_VALIDATE_EMAIL);
+
+        if(empty($errors) && $email) {
             $email = mysqli_real_escape_string($conn, $sign['email']);
             $sql = "SELECT id FROM users WHERE email = '$email'";
             $res = mysqli_query($conn, $sql);
@@ -69,7 +71,9 @@ if (!$conn) {
                 }
             }
         }
-        var_dump($sign['path']);
+        else {
+            $errors['users'] = 'Email неправильного формата';
+        }
         $data_form['values'] = $sign;
         $data_form['errors'] = $errors;
     }

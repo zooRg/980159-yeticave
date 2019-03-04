@@ -25,17 +25,17 @@ if (!$conn) {
     die();
 } else {
     $sqlCat = 'SELECT `name` AS name FROM category';
-    $sqlLots = 'SELECT c.name AS CATEGORY_NAME, y.*'
-        . ' FROM lot y'
-        . ' JOIN category c'
-        . ' ON y.category_id = c.id'
-        . ' WHERE y.id = ' . $lotID;
-    $sqlUsers = 'SELECT u.name, b.*'
-        . ' FROM bets b'
-        . ' JOIN users u'
-        . ' ON b.autor_id = u.id'
-        . ' WHERE b.lot_id = ' . $lotID
-        . ' ORDER BY b.data_add DESC';
+    $sqlLots = "SELECT c.name AS CATEGORY_NAME, y.*"
+        . " FROM lot y"
+        . " JOIN category c"
+        . " ON y.category_id = c.id"
+        . " WHERE y.id = '$lotID'";
+    $sqlUsers = "SELECT u.name, b.*"
+        . " FROM bets b"
+        . " JOIN users u"
+        . " ON b.autor_id = u.id"
+        . " WHERE b.lot_id = '$lotID'"
+        . " ORDER BY b.data_add DESC";
 
     $resultCat = mysqli_query($conn, $sqlCat);
     $resultLot = mysqli_query($conn, $sqlLots);
@@ -59,12 +59,14 @@ if (!$conn) {
     }
 
     $contents = include_template('lot.php', [
+        'is_auth'       => $is_auth,
         'timeLaps'      => $timeLaps,
         'category_name' => $lots['CATEGORY_NAME'],
         'category_desc' => $lots['description'],
         'start_price'   => $lots['start_price'],
         'step'          => $lots['step'],
         'lot_img'       => $lots['img'],
+        'title'         => $lots['name'],
         'users'         => $users
     ]);
 

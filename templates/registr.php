@@ -1,4 +1,4 @@
-<form class="form container<?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && count($errors)): ?> form--invalid<? endif; ?>"
+<form class="form container<?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && count($errors)): ?> form--invalid<? endif; ?>"
       action="/sign_up.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
 
     <h2>Регистрация нового аккаунта</h2>
@@ -7,28 +7,28 @@
         <!-- form__item--invalid -->
         <label for="email">E-mail*</label>
         <input id="email" type="text" name="registr[email]" placeholder="Введите e-mail"
-               value="<?php echo $values['email'] ?? ''; ?>" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+               value="<?php echo $values['email'] ?? ''; ?>" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
         <span class="form__error"><?php echo $errors['users'] ? $errors['users'] : $errors['email']; ?></span>
     </div>
 
     <div class="form__item<?php if (isset($errors['password'])): ?> form__item--invalid<? endif; ?>">
         <label for="password">Пароль*</label>
         <input id="password" type="text" name="registr[password]" placeholder="Введите пароль"
-               value="<?php echo $values['password'] ?? ''; ?>">
+               value="<?php echo $values['password'] ?? ''; ?>" required>
         <span class="form__error"><?php echo $errors['password']; ?></span>
     </div>
 
     <div class="form__item<?php if (isset($errors['name'])): ?> form__item--invalid<? endif; ?>">
         <label for="name">Имя*</label>
         <input id="name" type="text" name="registr[name]" placeholder="Введите имя"
-               value="<?php echo $values['name'] ?? ''; ?>">
+               value="<?php echo $values['name'] ?? ''; ?>" required>
         <span class="form__error"><?php echo $errors['name']; ?></span>
     </div>
 
     <div class="form__item<?php if (isset($errors['message'])): ?> form__item--invalid<? endif; ?>">
         <label for="message">Контактные данные*</label>
         <textarea id="message" name="registr[message]"
-                  placeholder="Напишите как с вами связаться"><?php echo $values['message'] ?? ''; ?></textarea>
+                  placeholder="Напишите как с вами связаться" required><?php echo $values['message'] ?? ''; ?></textarea>
         <span class="form__error"><?php echo $errors['message']; ?></span>
     </div>
 

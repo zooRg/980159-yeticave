@@ -25,9 +25,10 @@
             <nav class="user-menu">
 
                 <!-- здесь должен быть PHP код для показа имени пользователя -->
-                <?php if ($is_auth === 1): ?>
+                <?php if ($is_auth): ?>
                     <div class="user-menu__logged">
                         <p><?php echo $user_name; ?></p>
+                        <a href="/logout.php">Выход</a>
                     </div>
                 <?php else: ?>
                     <ul class="user-menu__list">

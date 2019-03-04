@@ -5,9 +5,15 @@ $nowTime = new DateTime('now');
 $tomorTime = new DateTime('tomorrow');
 $timeLaps = $nowTime->diff($tomorTime)->format('%H:%i');
 
-$is_auth = rand(0, 1);
-$user_name = 'Никита'; // укажите здесь ваше имя
+session_start();
 
+if (isset($_SESSION['user'])) {
+    $is_auth = true;
+    $user_name = $_SESSION['user']['name']; // укажите здесь ваше имя
+}
+else {
+    $is_auth = false;
+}
 
 $db['SERVER'] = 'localhost';
 $db['DBUSERNAME'] = 'root';
