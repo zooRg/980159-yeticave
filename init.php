@@ -20,5 +20,7 @@ $db['DBUSERNAME'] = 'root';
 $db['DBNAME'] = 'yeticave';
 $db['PASS'] = '';
 
-return $db;
+$conn = mysqli_connect($db['SERVER'], $db['DBUSERNAME'], $db['PASS'], $db['DBNAME']);
+mysqli_set_charset($conn, "utf8");
+
 ?>

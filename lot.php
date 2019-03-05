@@ -1,9 +1,6 @@
 <?php
 require_once('functions.php');
-$db = require_once('init.php');
-
-$conn = mysqli_connect($db['SERVER'], $db['DBUSERNAME'], $db['PASS'], $db['DBNAME']);
-mysqli_set_charset($conn, "utf8");
+require_once('init.php');
 
 $submenu = '';
 $lots = '';
@@ -15,14 +12,14 @@ if (isset($_GET['lot_id'])) {
 } else {
     http_response_code(404);
     print ('Страница не найдена');
-    die();
+    exit();
 }
 
 
 if (!$conn) {
     $error = mysqli_connect_error();
     print ($error);
-    die();
+    exit();
 } else {
     $sqlCat = 'SELECT `name` AS name FROM category';
     $sqlLots = "SELECT c.name AS CATEGORY_NAME, y.*"
@@ -35,7 +32,7 @@ if (!$conn) {
         . " JOIN users u"
         . " ON b.autor_id = u.id"
         . " WHERE b.lot_id = '$lotID'"
-        . " ORDER BY b.data_add DESC";
+        . " ORDER BY b.dt_add DESC";
 
     $resultCat = mysqli_query($conn, $sqlCat);
     $resultLot = mysqli_query($conn, $sqlLots);
@@ -49,13 +46,13 @@ if (!$conn) {
     } else {
         $error = mysqli_error($conn);
         print ($error);
-        die();
+        exit();
     }
 
     if (empty($lots)) {
         http_response_code(404);
         print ('Страница не найдена');
-        die();
+        exit();
     }
 
     $contents = include_template('lot.php', [

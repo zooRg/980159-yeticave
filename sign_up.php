@@ -1,18 +1,16 @@
 <?php
 
 require_once('functions.php');
-$db = require_once('init.php');
-
-$conn = mysqli_connect($db['SERVER'], $db['DBUSERNAME'], $db['PASS'], $db['DBNAME']);
-mysqli_set_charset($conn, "utf8");
+require_once('init.php');
 
 $submenu = '';
 $data_form = [];
+$errors = [];
 
 if (!$conn) {
     $error = mysqli_connect_error();
     print ($error);
-    die();
+    exit();
 } else {
     $sqlCat = 'SELECT id, name AS name FROM category';
 
@@ -23,57 +21,47 @@ if (!$conn) {
     } else {
         $error = mysqli_error($conn);
         print ($error);
-        die();
+        exit();
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $sign = $_POST['registr'];
-        $errors = [];
+        $email_formated = filter_var($sign['email'], FILTER_VALIDATE_EMAIL);
 
-        $required = ['email', 'password', 'name', 'message'];
+        $email = mysqli_real_escape_string($conn, $sign['email']);
+        $sql = "SELECT id FROM users WHERE email = '$email'";
+        $res = mysqli_query($conn, $sql);
 
-        foreach ($required as $key) {
-            if (empty($sign[$key])) {
-                $errors[$key] = 'Поле обязательно для заполнения';
-            }
-        }
-
-        $email = filter_var($sign['email'], FILTER_VALIDATE_EMAIL);
-
-        if(empty($errors) && $email) {
-            $email = mysqli_real_escape_string($conn, $sign['email']);
-            $sql = "SELECT id FROM users WHERE email = '$email'";
-            $res = mysqli_query($conn, $sql);
-
-            if (mysqli_num_rows($res) > 0) {
-                $errors['users'] = 'Пользователь с этим email уже зарегистрирован';
-            }
-            else {
-                $sign['path'] = '';
-                $password = password_hash($sign['password'], PASSWORD_DEFAULT);
-
-                if(!empty($_FILES['registr']['name']['photo'])) {
-                    $photoExt = explode('.', $_FILES['registr']['name']['photo'])[1];
-
-                    $filename = uniqid() . '.' . $photoExt;
-                    $sign['path'] = 'img/' . $filename;
-                    $result = move_uploaded_file($_FILES['registr']['tmp_name']['photo'], 'img/' . $filename);
-                }
-
-                $sql = 'INSERT INTO users (data_registr, email, name, password, avatar) VALUES (NOW(), ?, ?, ?, ?)';
-                $stmt = db_get_prepare_stmt($conn, $sql, [$sign['email'], $sign['name'], $password, $sign['path']]);
-                $res = mysqli_stmt_execute($stmt);
-
-                if ($res) {
-                    header("Location: /sign_in.php");
-                    exit();
-                }
-            }
-        }
-        else {
+        if($email_formated === false) {
             $errors['users'] = 'Email неправильного формата';
         }
+
+        if (mysqli_num_rows($res) > 0) {
+            $errors['users'] = 'Пользователь с этим email уже зарегистрирован';
+        }
+        elseif ($email_formated) {
+            $sign['path'] = '';
+            $password = password_hash($sign['password'], PASSWORD_DEFAULT);
+
+            if(!empty($_FILES['registr']['name']['photo'])) {
+                $photoExt = explode('.', $_FILES['registr']['name']['photo'])[1];
+
+                $filename = uniqid() . '.' . $photoExt;
+                $sign['path'] = 'img/' . $filename;
+                $result = move_uploaded_file($_FILES['registr']['tmp_name']['photo'], 'img/' . $filename);
+            }
+
+            $sql = 'INSERT INTO users (dt_registr, email, name, password, avatar) VALUES (NOW(), ?, ?, ?, ?)';
+            $stmt = db_get_prepare_stmt($conn, $sql, [$sign['email'], $sign['name'], $password, $sign['path']]);
+            $res = mysqli_stmt_execute($stmt);
+
+            if ($res) {
+                header("Location: /sign_in.php");
+                exit();
+            }
+        }
+
         $data_form['values'] = $sign;
         $data_form['errors'] = $errors;
     }
