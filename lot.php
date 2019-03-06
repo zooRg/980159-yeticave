@@ -1,29 +1,30 @@
 <?php
 require_once('functions.php');
-$db = require_once('init.php');
-
-$conn = mysqli_connect($db['SERVER'], $db['DBUSERNAME'], $db['PASS'], $db['DBNAME']);
-mysqli_set_charset($conn, "utf8");
+require_once('init.php');
 
 $submenu = '';
 $lots = '';
 $lotID = '';
-
+$contents = [];
+$cost = '';
+$error_cost = 'Введите вашу ставку';
 
 if (isset($_GET['lot_id'])) {
     $lotID = $_GET['lot_id'];
-} else {
+}
+else {
     http_response_code(404);
     print ('Страница не найдена');
-    die();
+    exit();
 }
 
 
 if (!$conn) {
     $error = mysqli_connect_error();
     print ($error);
-    die();
-} else {
+    exit();
+}
+else {
     $sqlCat = 'SELECT `name` AS name FROM category';
     $sqlLots = "SELECT c.name AS CATEGORY_NAME, y.*"
         . " FROM lot y"
@@ -35,7 +36,7 @@ if (!$conn) {
         . " JOIN users u"
         . " ON b.autor_id = u.id"
         . " WHERE b.lot_id = '$lotID'"
-        . " ORDER BY b.data_add DESC";
+        . " ORDER BY b.dt_add DESC";
 
     $resultCat = mysqli_query($conn, $sqlCat);
     $resultLot = mysqli_query($conn, $sqlLots);
@@ -43,19 +44,53 @@ if (!$conn) {
 
     if ($resultCat && $resultLot) {
         $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
-        $lots = mysqli_fetch_all($resultLot, MYSQLI_ASSOC);
+        $lot = mysqli_fetch_all($resultLot, MYSQLI_ASSOC);
         $users = mysqli_fetch_all($resultUser, MYSQLI_ASSOC);
-        $lots = $lots[0];
-    } else {
+        $lots = $lot[0];
+    }
+    else {
         $error = mysqli_error($conn);
         print ($error);
-        die();
+        exit();
     }
 
     if (empty($lots)) {
         http_response_code(404);
         print ('Страница не найдена');
-        die();
+        exit();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && is_numeric($_POST['cost'])) {
+        $cost = intval($_POST['cost']);
+    }
+
+    $start_price = intval($lots['start_price']) + array_sum(array_column($users, 'sum_price'));
+    $step = intval($lots['step']);
+    $end_sum = ceil($start_price + $step);
+
+    if ($is_auth && $cost >= $end_sum) {
+        $user_id = $_SESSION['user']['id'];
+
+        $sql = 'INSERT INTO bets'
+            . ' (dt_add, sum_price, autor_id, lot_id)'
+            . ' VALUES'
+            . ' (NOW(), ?, ?, ?)';
+
+        $stmt = db_get_prepare_stmt(
+            $conn,
+            $sql,
+            [
+                $conn->real_escape_string($cost),
+                $conn->real_escape_string($user_id),
+                $conn->real_escape_string($lotID)
+            ]
+        );
+        $res = mysqli_stmt_execute($stmt);
+        header("Location: /lot.php?lot_id=" . $lotID);
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $cost < $end_sum) {
+        $error_cost = 'Ваша ставка меньше минимальной';
     }
 
     $contents = include_template('lot.php', [
@@ -63,22 +98,23 @@ if (!$conn) {
         'timeLaps'      => $timeLaps,
         'category_name' => $lots['CATEGORY_NAME'],
         'category_desc' => $lots['description'],
-        'start_price'   => $lots['start_price'],
-        'step'          => $lots['step'],
+        'start_price'   => $start_price,
+        'step'          => $end_sum,
         'lot_img'       => $lots['img'],
-        'title'         => $lots['name'],
-        'users'         => $users
-    ]);
-
-    $html = include_template('layout.php', [
-        'is_auth'    => $is_auth,
-        'user_name'  => $user_name,
-        'title'      => $lots['name'],
-        'submenu'    => $submenu,
-        'index_page' => 'non',
-        'contents'   => $contents
+        'users'         => $users,
+        'error_cost'    => $error_cost,
+        'cost'          => $cost
     ]);
 }
+
+$html = include_template('layout.php', [
+    'is_auth'    => $is_auth,
+    'user_name'  => $user_name,
+    'title'      => 'YetiCave - ' . $lots['name'],
+    'submenu'    => $submenu,
+    'index_page' => 'non',
+    'contents'   => $contents
+]);
 
 print($html);
 

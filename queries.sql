@@ -16,16 +16,17 @@ VALUES
 
 
 /* Добавляем пользователей */
-INSERT INTO yeticave2.users
-  (data_registr, email, name, password, avatar, contacts, create_lot_id, bets_id)
+INSERT INTO yeticave.users
+  (dt_registr, email, name, password, avatar, contacts, create_lot_id, bets_id)
 VALUES
   (CURRENT_TIMESTAMP, 'turbo@mail.ru', 'turbo', '123123', '', '+7(999) 999-99-99', '1', '1'),
   (CURRENT_TIMESTAMP, 'switty@mail.ru', 'switty', '123123', '', '+7(111) 111-11-11', '2', '2');
 
 
 /* Добавляем лоты */
-INSERT INTO yeticave2.lot
-	(data_add, name, description, img, start_price, date_end, step, autor_id, vinner_id, category_id)
+
+INSERT INTO yeticave.lot
+	(dt_add, name, description, img, start_price, dt_end, step, autor_id, vinner_id, category_id)
 VALUES
     (
         CURRENT_TIMESTAMP - INTERVAL 1 hour,
@@ -97,8 +98,8 @@ VALUES
 
 
 /* Добавляем ставки */
-INSERT INTO yeticave2.bets
-	(data_add, sum_price, autor_id, lot_id)
+INSERT INTO yeticave.bets
+	(dt_add, sum_price, autor_id, lot_id)
 VALUES
     (CURRENT_TIMESTAMP - INTERVAL 4 HOUR, '2000', 1, 1),
     (CURRENT_TIMESTAMP - INTERVAL 4 HOUR, '10000', 2, 2),
@@ -112,8 +113,8 @@ SELECT y.name, y.start_price, y.img, y.step, c.name AS cat_name
 FROM yeticave2.lot y
 JOIN category c
 ON y.category_id = c.id
-WHERE y.data_add < y.date_end
-ORDER BY y.data_add DESC
+WHERE y.dt_add < y.dt_end
+ORDER BY y.dt_add DESC
 LIMIT 3;
 
 /* Получаем лот по его айди и выводим название раздела к какому привязан лот */
@@ -134,11 +135,11 @@ FROM yeticave2.bets b
 JOIN yeticave2.lot y
 ON b.lot_id = y.id
 WHERE b.lot_id = 3
-ORDER BY b.data_add DESC;
+ORDER BY b.dt_add DESC;
 
 SELECT SUM(b.sum_price), name
 FROM yeticave2.bets b
 JOIN yeticave2.lot y
 ON b.lot_id = y.id
 WHERE b.lot_id = 3
-ORDER BY b.data_add DESC;
+ORDER BY b.dt_add DESC;

@@ -32,7 +32,7 @@
         <span class="form__error"><?php echo $errors['message'] ?? ''; ?></span>
     </div>
 
-    <div class="form__item form__item--file">
+    <div class="form__item form__item--file<?php if (isset($errors['path'])): ?> form__item--invalid<? endif; ?>">
         <!-- form__item--uploaded -->
         <label>Изображение</label>
         <div class="preview">
@@ -46,6 +46,7 @@
             <label for="photo2">
                 <span>+ Добавить</span>
             </label>
+            <span class="form__error"><?php echo $errors['path'] ?? ''; ?></span>
         </div>
     </div>
 

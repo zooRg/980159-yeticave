@@ -23,11 +23,11 @@
                             Мин. ставка <span><?php echo htmlspecialchars(formatPrice($step)); ?></span>
                         </div>
                     </div>
-                    <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post">
+                    <form class="lot-item__form" action="/lot.php?lot_id=<?php echo $_GET['lot_id']?>" method="post">
                         <p class="lot-item__form-item form__item form__item--invalid">
                             <label for="cost">Ваша ставка</label>
-                            <input id="cost" type="text" name="cost" placeholder="12 000">
-                            <span class="form__error">Введите наименование лота</span>
+                            <input id="cost" type="text" name="cost" placeholder="12 000" value="<?php echo $cost; ?>">
+                            <span class="form__error"><?php echo $error_cost; ?></span>
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
@@ -44,7 +44,7 @@
                         <tr class="history__item">
                             <td class="history__name"><?php echo htmlspecialchars($user['name']); ?></td>
                             <td class="history__price"><?php echo htmlspecialchars(formatPrice($user['sum_price'])); ?></td>
-                            <td class="history__time"><?php echo htmlspecialchars(time_format_laps(strtotime($user['data_add']))); ?></td>
+                            <td class="history__time"><?php echo htmlspecialchars(time_format_laps(strtotime($user['dt_add']))); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
