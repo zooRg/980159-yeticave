@@ -67,7 +67,10 @@ if (!$conn) {
     }
 }
 
-$contents = include_template('registr.php', $data_form);
+$contents = include_template('registr.php', [
+    'values' => $data_form['values'],
+    'errors' => $data_form['errors']
+]);
 
 $html = include_template('layout.php', [
     'is_auth'    => $is_auth,

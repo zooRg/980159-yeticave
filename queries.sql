@@ -1,7 +1,3 @@
-/* Переименовываем Поле в таблице для четкого понимания что это */
-ALTER TABLE yeticave.lot
-CHANGE COLUMN user_id vinner_id INT(11);
-
 /* Добавляем категории в таблицу */
 INSERT INTO yeticave.category
   (name)
@@ -125,7 +121,7 @@ WHERE y.category_id = 2;
 
 /* Получаем лот по айди и меняем название */
 UPDATE yeticave.lot
-SET name = '2014 Rossignol District Snowboard'
+SET name = '2014 Rossignol District Snowboard2'
 WHERE id = 2;
 
 /* Получем ставки по айди лота и отсортировав по дате добавления */

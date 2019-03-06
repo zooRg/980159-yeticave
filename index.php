@@ -13,7 +13,7 @@ if (!$conn) {
 }
 else {
     $sqlCat = 'SELECT `name` AS name FROM category';
-    $sqlLots = 'SELECT y.name AS NAME, y.start_price AS PRICE, y.img AS PICTURE, c.name AS CATEGORY, y.id AS ID'
+    $sqlLots = 'SELECT y.name AS NAME, y.dt_end, y.start_price AS PRICE, y.img AS PICTURE, c.name AS CATEGORY, y.id AS ID'
         . ' FROM lot y'
         . ' JOIN category c'
         . ' ON y.category_id = c.id'

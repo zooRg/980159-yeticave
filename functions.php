@@ -124,4 +124,18 @@ function time_format_laps($time)
     return $time_laps;
 }
 
+/**
+ * @param $time - входящая дата в формате в 2019-03-06 17:12:05
+ * @return string
+ */
+function time_lot_laps($time)
+{
+    date_default_timezone_set('Etc/GMT-3');
+    $nowTime = new DateTime('now');
+    $tomorTime = new DateTime($time);
+    $date = $nowTime->diff($tomorTime)->format('%mмес. %dдн. %H:%I:%s');
+
+    return $date;
+}
+
 ?>
