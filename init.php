@@ -1,4 +1,6 @@
 <?php
+require_once('functions.php');
+require_once('Database.php');
 
 session_start();
 $is_auth = false;
@@ -8,12 +10,7 @@ if (isset($_SESSION['user'])) {
     $user_name = $_SESSION['user']['name']; // укажите здесь ваше имя
 }
 
-$db['SERVER'] = 'localhost';
-$db['DBUSERNAME'] = 'root';
-$db['DBNAME'] = 'yeticave';
-$db['PASS'] = '';
+$db = ['localhost', 'root', '', 'yeticave'];
 
-$conn = mysqli_connect($db['SERVER'], $db['DBUSERNAME'], $db['PASS'], $db['DBNAME']);
-mysqli_set_charset($conn, "utf8");
-
+$dbHelper = new Database(...$db);
 ?>

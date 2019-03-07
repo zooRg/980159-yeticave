@@ -1,0 +1,12 @@
+{
+    "name": "zoorg/yeticave",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zooRg",
+            "email": "electroyz@mail.ru"
+        }
+    ],
+    "require": {}
+}

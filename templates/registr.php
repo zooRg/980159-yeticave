@@ -7,7 +7,8 @@
         <!-- form__item--invalid -->
         <label for="email">E-mail*</label>
         <input id="email" type="text" name="registr[email]" placeholder="Введите e-mail"
-               value="<?php echo $values['email'] ?? ''; ?>" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+               value="<?php echo $values['email'] ?? ''; ?>" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+               required>
         <span class="form__error"><?php echo $errors['users'] ? $errors['users'] : $errors['email']; ?></span>
     </div>
 
@@ -28,7 +29,8 @@
     <div class="form__item<?php if (isset($errors['message'])): ?> form__item--invalid<? endif; ?>">
         <label for="message">Контактные данные*</label>
         <textarea id="message" name="registr[message]"
-                  placeholder="Напишите как с вами связаться" required><?php echo $values['message'] ?? ''; ?></textarea>
+                  placeholder="Напишите как с вами связаться"
+                  required><?php echo $values['message'] ?? ''; ?></textarea>
         <span class="form__error"><?php echo $errors['message']; ?></span>
     </div>
 

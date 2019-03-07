@@ -7,20 +7,16 @@ $submenu = '';
 $data_form = [];
 $errors = [];
 
-if (!$conn) {
-    $error = mysqli_connect_error();
-    print ($error);
+if ($dbHelper->getError()) {
+    print $dbHelper->getError();
     exit();
 } else {
-    $sqlCat = 'SELECT id, name AS name FROM category';
+    $dbHelper->executeQuery('SELECT id, name AS name FROM category');
 
-    $resultCat = mysqli_query($conn, $sqlCat);
-
-    if ($resultCat) {
-        $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
+    if (!$dbHelper->getError()) {
+        $submenu = $dbHelper->getResultArray();
     } else {
-        $error = mysqli_error($conn);
-        print ($error);
+        print $dbHelper->getError();
         exit();
     }
 
@@ -29,22 +25,25 @@ if (!$conn) {
         $sign = $_POST['registr'];
         $email_formated = filter_var($sign['email'], FILTER_VALIDATE_EMAIL);
 
-        $email = mysqli_real_escape_string($conn, $sign['email']);
-        $sql = "SELECT id FROM users WHERE email = '$email'";
-        $res = mysqli_query($conn, $sql);
+        $email = $dbHelper->getEscapeStr($sign['email']);
 
-        if($email_formated === false) {
+        $sql = "SELECT id FROM users WHERE email = '$email'";
+        $dbHelper->executeQuery($sql);
+        $res = $dbHelper->getResultArray();
+
+        if ($email_formated === false) {
             $errors['users'] = 'Email неправильного формата';
         }
 
-        if (mysqli_num_rows($res) > 0) {
+        if (0 < $dbHelper->getNumRows($res)) {
             $errors['users'] = 'Пользователь с этим email уже зарегистрирован';
         }
-        elseif ($email_formated) {
+
+        if ($email_formated) {
             $sign['path'] = '';
             $password = password_hash($sign['password'], PASSWORD_DEFAULT);
 
-            if(!empty($_FILES['registr']['name']['photo'])) {
+            if (!empty($_FILES['registr']['name']['photo'])) {
                 $photoExt = explode('.', $_FILES['registr']['name']['photo'])[1];
 
                 $filename = uniqid() . '.' . $photoExt;
@@ -53,8 +52,8 @@ if (!$conn) {
             }
 
             $sql = 'INSERT INTO users (dt_registr, email, name, password, avatar) VALUES (NOW(), ?, ?, ?, ?)';
-            $stmt = db_get_prepare_stmt($conn, $sql, [$sign['email'], $sign['name'], $password, $sign['path']]);
-            $res = mysqli_stmt_execute($stmt);
+            $dbHelper->executeQuery($sql, [$sign['email'], $sign['name'], $password, $sign['path']]);
+            $res = $dbHelper->getID();
 
             if ($res) {
                 header("Location: /sign_in.php");

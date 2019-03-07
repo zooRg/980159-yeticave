@@ -1,48 +1,59 @@
 <?php
-
 require_once('functions.php');
 require_once('init.php');
 
 $submenu = '';
 $lots = [];
 
-if (!$conn) {
-    $error = mysqli_connect_error();
-    print ($error);
+if ($dbHelper->getError()) {
+    print $dbHelper->getError();
     exit();
 } else {
-    $sqlCat = 'SELECT id, name AS name FROM category';
+    $dbHelper->executeQuery('SELECT `name` AS name FROM category');
 
-    $resultCat = mysqli_query($conn, $sqlCat);
-
-    if ($resultCat) {
-        $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
+    if (!$dbHelper->getError()) {
+        $submenu = $dbHelper->getResultArray();
     } else {
-        $error = mysqli_error($conn);
-        print ($error);
+        print $dbHelper->getError();
         exit();
     }
 
-    $search = $_GET['search'] ?? '';
+    $search = $dbHelper->getEscapeStr($_GET['search']) ?? '';
+    $cur_page = $_GET['page'] ?? 1;
     $search = htmlspecialchars($search);
+    $page_items = 3;
 
     if ($search) {
-        $sql = "SELECT lot.name, lot.img, lot.start_price, lot.dt_end, category.name AS category_name"
+        $sql = "SELECT COUNT(*) as cnt"
+            . " FROM lot"
+            . " WHERE MATCH(name, description) AGAINST(?)";
+        $dbHelper->executeQuery($sql, [$search]);
+        $items_count = $dbHelper->getResultArray()[0]['cnt'];
+
+        $pages_count = ceil($items_count / $page_items);
+        $offset = ($cur_page - 1) * $page_items;
+
+        $pages = range(1, $pages_count);
+
+        $sql = "SELECT lot.*, category.name AS category_name"
             . " FROM lot"
             . " JOIN category"
             . " ON lot.category_id = category.id"
-            . " WHERE MATCH(lot.name, description) AGAINST(?)";
+            . " WHERE MATCH(lot.name, description) AGAINST(?)"
+            . " GROUP BY lot.name"
+            . " LIMIT " . $page_items . " OFFSET " . $offset . "";
 
-        $stmt = db_get_prepare_stmt($conn, $sql, [$conn->real_escape_string($search)]);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-
-        $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $dbHelper->executeQuery($sql, [$search]);
+        $lots = $dbHelper->getResultArray();
     }
 
     $contents = include_template('search_tpl.php', [
-        'lots' => $lots,
-        'search' => $search
+        'lots'        => $lots,
+        'search'      => $search,
+        'count'       => $items_count,
+        'pages'       => $pages,
+        'pages_count' => $pages_count,
+        'cur_page'    => $cur_page
     ]);
 }
 

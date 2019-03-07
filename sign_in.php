@@ -7,31 +7,27 @@ $submenu = '';
 $errors = [];
 $data_form = [];
 
-if (!$conn) {
-    $error = mysqli_connect_error();
-    print ($error);
+if ($dbHelper->getError()) {
+    print $dbHelper->getError();
     exit();
 } else {
-    $sqlCat = 'SELECT id, name AS name FROM category';
+    $dbHelper->executeQuery('SELECT id, name AS name FROM category');
 
-    $resultCat = mysqli_query($conn, $sqlCat);
-
-    if ($resultCat) {
-        $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
+    if (!$dbHelper->getError()) {
+        $submenu = $dbHelper->getResultArray();
     } else {
-        $error = mysqli_error($conn);
-        print ($error);
+        print $dbHelper->getError();
         exit();
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sign = $_POST;
 
-        $email = mysqli_real_escape_string($conn, $sign['email']);
+        $email = $dbHelper->getEscapeStr($sign['email']);
         $sql = "SELECT * FROM users WHERE email = '$email'";
-        $res = mysqli_query($conn, $sql);
+        $dbHelper->executeQuery($sql);
+        $user = $dbHelper->getResultArray()[0] ?? null;
 
-        $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
         $email_formated = filter_var($sign['email'], FILTER_VALIDATE_EMAIL);
 
         if (!$user) {
@@ -45,8 +41,7 @@ if (!$conn) {
             $_SESSION['user'] = $user;
             header("Location: /index.php");
             exit();
-        }
-        else {
+        } else {
             $errors['password'] = 'Неверный пароль';
         }
 

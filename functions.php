@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @param $name - название шаблона
  * @param $data - входной массив
@@ -45,11 +44,9 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 
             if (is_int($value)) {
                 $type = 'i';
-            }
-            elseif (is_string($value)) {
+            } elseif (is_string($value)) {
                 $type = 's';
-            }
-            elseif (is_double($value)) {
+            } elseif (is_double($value)) {
                 $type = 'd';
             }
 
@@ -113,11 +110,9 @@ function time_format_laps($time)
 
     if ($dif < 59) {
         $time_laps = $dif . " сек. назад";
-    }
-    elseif ($dif / 60 > 1 && $dif / 60 < 59) {
+    } elseif ($dif / 60 > 1 && $dif / 60 < 59) {
         $time_laps = round($dif / 60) . " мин. назад";
-    }
-    elseif ($dif / 3600 > 1 && $dif / 3600 < 23) {
+    } elseif ($dif / 3600 > 1 && $dif / 3600 < 23) {
         $time_laps = round($dif / 3600) . " час. назад";
     }
 

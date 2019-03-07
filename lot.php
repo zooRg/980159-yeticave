@@ -10,47 +10,55 @@ $cost = '';
 $error_cost = 'Введите вашу ставку';
 
 if (isset($_GET['lot_id'])) {
-    $lotID = $_GET['lot_id'];
-}
-else {
+    $lotID = htmlspecialchars($_GET['lot_id']);
+} else {
     http_response_code(404);
     print ('Страница не найдена');
     exit();
 }
 
 
-if (!$conn) {
-    $error = mysqli_connect_error();
-    print ($error);
+if ($dbHelper->getError()) {
+    print $dbHelper->getError();
     exit();
-}
-else {
+} else {
     $sqlCat = 'SELECT `name` AS name FROM category';
+    $dbHelper->executeQuery($sqlCat);
+
+    if (!$dbHelper->getError()) {
+        $submenu = $dbHelper->getResultArray();
+    } else {
+        print $dbHelper->getError();
+        exit();
+    }
+
     $sqlLots = "SELECT c.name AS CATEGORY_NAME, y.*"
         . " FROM lot y"
         . " JOIN category c"
         . " ON y.category_id = c.id"
         . " WHERE y.id = '$lotID'";
+    $dbHelper->executeQuery($sqlLots);
+
+    if (!$dbHelper->getError()) {
+        $lot = $dbHelper->getResultArray();
+        $lots = $lot[0];
+    } else {
+        print $dbHelper->getError();
+        exit();
+    }
+
     $sqlUsers = "SELECT u.name, b.*"
         . " FROM bets b"
         . " JOIN users u"
         . " ON b.autor_id = u.id"
         . " WHERE b.lot_id = '$lotID'"
         . " ORDER BY b.dt_add DESC";
+    $dbHelper->executeQuery($sqlUsers);
 
-    $resultCat = mysqli_query($conn, $sqlCat);
-    $resultLot = mysqli_query($conn, $sqlLots);
-    $resultUser = mysqli_query($conn, $sqlUsers);
-
-    if ($resultCat && $resultLot) {
-        $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
-        $lot = mysqli_fetch_all($resultLot, MYSQLI_ASSOC);
-        $users = mysqli_fetch_all($resultUser, MYSQLI_ASSOC);
-        $lots = $lot[0];
-    }
-    else {
-        $error = mysqli_error($conn);
-        print ($error);
+    if (!$dbHelper->getError()) {
+        $users = $dbHelper->getResultArray();
+    } else {
+        print $dbHelper->getError();
         exit();
     }
 
@@ -76,16 +84,15 @@ else {
             . ' VALUES'
             . ' (NOW(), ?, ?, ?)';
 
-        $stmt = db_get_prepare_stmt(
-            $conn,
+        $dbHelper->executeQuery(
             $sql,
             [
-                $conn->real_escape_string($cost),
-                $conn->real_escape_string($user_id),
-                $conn->real_escape_string($lotID)
+                $dbHelper->getEscapeStr($cost),
+                $dbHelper->getEscapeStr($user_id),
+                $dbHelper->getEscapeStr($lotID)
             ]
         );
-        $res = mysqli_stmt_execute($stmt);
+        $users = $dbHelper->getResultArray();
         header("Location: /lot.php?lot_id=" . $lotID);
     }
 
