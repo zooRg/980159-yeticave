@@ -1,5 +1,6 @@
 <?php
 require_once('init.php');
+require_once('getwinner.php');
 
 $submenu = '';
 $contents = '';

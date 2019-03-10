@@ -1,5 +1,4 @@
 <?php
-require_once('functions.php');
 require_once('init.php');
 
 $submenu = '';
@@ -72,12 +71,14 @@ if ($dbHelper->getError()) {
         $cost = intval($_POST['cost']);
     }
 
-    $start_price = intval($lots['start_price']) + array_sum(array_column($users, 'sum_price'));
+    $start_price = $users[0]['sum_price'];
     $step = intval($lots['step']);
     $end_sum = ceil($start_price + $step);
 
     if ($is_auth && $cost >= $end_sum) {
-        $user_id = $_SESSION['user']['id'];
+        $user_id = $dbHelper->getEscapeStr($_SESSION['user']['id']);
+        $cost = $dbHelper->getEscapeStr($cost);
+        $lotID = $dbHelper->getEscapeStr($lotID);
 
         $sql = 'INSERT INTO bets'
             . ' (dt_add, sum_price, autor_id, lot_id)'
@@ -87,12 +88,13 @@ if ($dbHelper->getError()) {
         $dbHelper->executeQuery(
             $sql,
             [
-                $dbHelper->getEscapeStr($cost),
-                $dbHelper->getEscapeStr($user_id),
-                $dbHelper->getEscapeStr($lotID)
+                $cost,
+                $user_id,
+                $lotID
             ]
         );
         $users = $dbHelper->getResultArray();
+
         header("Location: /lot.php?lot_id=" . $lotID);
     }
 
@@ -102,7 +104,8 @@ if ($dbHelper->getError()) {
 
     $contents = include_template('lot.php', [
         'is_auth'       => $is_auth,
-        'timeLaps'      => $timeLaps,
+        'title'         => $lots['name'],
+        'timeLaps'      => time_lot_laps($lots['dt_end']),
         'category_name' => $lots['CATEGORY_NAME'],
         'category_desc' => $lots['description'],
         'start_price'   => $start_price,

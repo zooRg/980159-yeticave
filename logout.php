@@ -1,5 +1,4 @@
 <?php
-require_once('functions.php');
 require_once('init.php');
 
 if ($_SESSION['user'] && $is_auth) {

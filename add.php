@@ -1,5 +1,4 @@
 <?php
-require_once('functions.php');
 require_once('init.php');
 
 $submenu = '';
@@ -53,6 +52,10 @@ if ($dbHelper->getError()) {
             $data_html['errors']['dateEnd'] = 'Дата должна быть больше текущей';
         }
 
+        if (!$add_lot['category']) {
+            $data_html['errors']['category'] = $errors['category'];
+        }
+
         $dbHelper->executeQuery(
             $sql,
             [
@@ -65,12 +68,11 @@ if ($dbHelper->getError()) {
                 $date_end
             ]
         );
-        $res = $dbHelper->getResultArray();
+        $res = $dbHelper->getID();
 
         if ($res) {
             $result = move_uploaded_file($_FILES['lot']['tmp_name']['photo'], 'img/' . $filename);
-            $lot_id = $dbHelper->getID();
-            header("Location: /lot.php?lot_id=" . $lot_id);
+            header("Location: /lot.php?lot_id=" . $res);
             exit();
         }
 

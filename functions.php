@@ -108,11 +108,11 @@ function time_format_laps($time)
     $dif = time() - $time;
     $time_laps = $date;
 
-    if ($dif < 59) {
+    if (59 > $dif) {
         $time_laps = $dif . " сек. назад";
-    } elseif ($dif / 60 > 1 && $dif / 60 < 59) {
+    } elseif ( 1 < $dif / 60 && 59 > $dif / 60) {
         $time_laps = round($dif / 60) . " мин. назад";
-    } elseif ($dif / 3600 > 1 && $dif / 3600 < 23) {
+    } elseif (1 < $dif / 3600 && 23 > $dif / 3600) {
         $time_laps = round($dif / 3600) . " час. назад";
     }
 
@@ -128,7 +128,11 @@ function time_lot_laps($time)
     date_default_timezone_set('Etc/GMT-3');
     $nowTime = new DateTime('now');
     $tomorTime = new DateTime($time);
-    $date = $nowTime->diff($tomorTime)->format('%mмес. %dдн. %H:%I:%s');
+    if ($nowTime->getTimestamp() < $tomorTime->getTimestamp()) {
+        $date = $nowTime->diff($tomorTime)->format('%mмес. %dдн. %H:%I:%s');
+    } else {
+        $date = 'Закончен';
+    }
 
     return $date;
 }

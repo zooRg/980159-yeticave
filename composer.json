@@ -8,5 +8,7 @@
             "email": "electroyz@mail.ru"
         }
     ],
-    "require": {}
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
 }
