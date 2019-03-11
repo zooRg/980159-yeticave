@@ -1,31 +1,33 @@
 <?php
-
-require_once ('functions.php');
-require_once ('init.php');
+require_once('init.php');
+require_once('getwinner.php');
 
 $submenu = '';
 $contents = '';
 
-if (!$conn) {
-    $error = mysqli_connect_error();
-    print ($error);
+if ($dbHelper->getError()) {
+    print $dbHelper->getError();
     exit();
-}
-else {
-    $sqlCat = 'SELECT `name` AS name FROM category';
-    $sqlLots = 'SELECT y.name AS NAME, y.start_price AS PRICE, y.img AS PICTURE, c.name AS CATEGORY, y.id AS ID'
+} else {
+    $dbHelper->executeQuery('SELECT `name` AS name FROM category');
+
+    if (!$dbHelper->getError()) {
+        $submenu = $dbHelper->getResultArray();
+    } else {
+        print $dbHelper->getError();
+        exit();
+    }
+
+    $dbHelper->executeQuery('SELECT y.name AS NAME, y.dt_end, y.start_price AS PRICE, y.img AS PICTURE, c.name AS CATEGORY, y.id AS ID'
         . ' FROM lot y'
         . ' JOIN category c'
         . ' ON y.category_id = c.id'
         . ' WHERE y.dt_add < y.dt_end'
         . ' ORDER BY y.dt_add DESC'
-        . ' LIMIT 9';
-    $resultCat = mysqli_query($conn, $sqlCat);
-    $resultLot = mysqli_query($conn, $sqlLots);
+        . ' LIMIT 9');
 
-    if ($resultCat && $resultLot) {
-        $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
-        $adds = mysqli_fetch_all($resultLot, MYSQLI_ASSOC);
+    if (!$dbHelper->getError()) {
+        $adds = $dbHelper->getResultArray();
 
         $contents = include_template('index.php', [
             'submenu'  => $submenu,
@@ -33,10 +35,8 @@ else {
             'timeLaps' => $timeLaps,
             'url'      => '/lot.php'
         ]);
-    }
-    else {
-        $error = mysqli_error($conn);
-        print ($error);
+    } else {
+        print $dbHelper->getError();
         exit();
     }
 }

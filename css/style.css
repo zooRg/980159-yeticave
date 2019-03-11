@@ -1017,7 +1017,7 @@ input:invalid .form__error{
   -webkit-align-self: flex-end;
   -ms-flex-item-align: end;
   align-self: flex-end;
-  width: 80px;
+  width: auto;
   margin-bottom: 19px;
   box-sizing: border-box;
 }

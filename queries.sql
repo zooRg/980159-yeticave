@@ -1,7 +1,3 @@
-/* Переименовываем Поле в таблице для четкого понимания что это */
---ALTER TABLE yeticave2.lot
---CHANGE COLUMN user_id vinner_id INT(11);
-
 /* Добавляем категории в таблицу */
 INSERT INTO yeticave2.category
   (name)

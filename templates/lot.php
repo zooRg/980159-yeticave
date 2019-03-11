@@ -9,7 +9,7 @@
             <p class="lot-item__description"><?php echo $category_desc; ?></p>
         </div>
         <div class="lot-item__right">
-            <?php if($is_auth): ?>
+            <?php if ($is_auth && $timeLaps !== 'Закончен'): ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
                         <?php echo $timeLaps; ?>
@@ -17,13 +17,13 @@
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?php echo $start_price; ?></span>
+                            <span class="lot-item__cost"><?php echo htmlspecialchars(formatPrice($start_price)); ?></span>
                         </div>
                         <div class="lot-item__min-cost">
                             Мин. ставка <span><?php echo htmlspecialchars(formatPrice($step)); ?></span>
                         </div>
                     </div>
-                    <form class="lot-item__form" action="/lot.php?lot_id=<?php echo $_GET['lot_id']?>" method="post">
+                    <form class="lot-item__form" action="/lot.php?lot_id=<?php echo $_GET['lot_id'] ?>" method="post">
                         <p class="lot-item__form-item form__item form__item--invalid">
                             <label for="cost">Ваша ставка</label>
                             <input id="cost" type="text" name="cost" placeholder="12 000" value="<?php echo $cost; ?>">
@@ -31,6 +31,18 @@
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
+                </div>
+            <?php elseif($timeLaps === 'Закончен'): ?>
+                <div class="lot-item__state">
+                    <div class="lot-item__timer timer">
+                        <?php echo $timeLaps; ?>
+                    </div>
+                    <div class="lot-item__cost-state">
+                        <div class="lot-item__rate">
+                            <span class="lot-item__amount">Выйграла цена</span>
+                            <span class="lot-item__cost"><?php echo htmlspecialchars(formatPrice($start_price)); ?></span>
+                        </div>
+                    </div>
                 </div>
             <?php else: ?>
                 <div class="lot-item__state form__item--invalid">

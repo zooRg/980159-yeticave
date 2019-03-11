@@ -1,0 +1,14 @@
+{
+    "name": "zoorg/yeticave",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zooRg",
+            "email": "electroyz@mail.ru"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
+}

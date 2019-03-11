@@ -1,6 +1,4 @@
 <?php
-
-require_once('functions.php');
 require_once('init.php');
 
 $submenu = '';
@@ -20,22 +18,16 @@ if (!$is_auth) {
     exit();
 }
 
-if (!$conn) {
-    $error = mysqli_connect_error();
-    print ($error);
+if ($dbHelper->getError()) {
+    print $dbHelper->getError();
     exit();
-}
-else {
-    $sqlCat = 'SELECT id, name AS name FROM category';
+} else {
+    $dbHelper->executeQuery('SELECT id, name AS name FROM category');
 
-    $resultCat = mysqli_query($conn, $sqlCat);
-
-    if ($resultCat) {
-        $submenu = mysqli_fetch_all($resultCat, MYSQLI_ASSOC);
-    }
-    else {
-        $error = mysqli_error($conn);
-        print ($error);
+    if (!$dbHelper->getError()) {
+        $submenu = $dbHelper->getResultArray();
+    } else {
+        print $dbHelper->getError();
         exit();
     }
 
@@ -53,32 +45,34 @@ else {
             . ' VALUES'
             . ' (NOW(), ?, 1, ?, ?, ?, ?, ?, ?)';
 
-        $date_end = date('Y-m-d H:i:s', strtotime($conn->real_escape_string($add_lot['dateEnd'])));
+        $date_end = date('Y-m-d H:i:s', strtotime($dbHelper->getEscapeStr($add_lot['dateEnd'])));
         $date_now = date('Y-m-d H:i:s');
 
-        if($date_end < $date_now) {
+        if ($date_end < $date_now) {
             $data_html['errors']['dateEnd'] = 'Дата должна быть больше текущей';
         }
 
-        $stmt = db_get_prepare_stmt(
-            $conn,
+        if (!$add_lot['category']) {
+            $data_html['errors']['category'] = $errors['category'];
+        }
+
+        $dbHelper->executeQuery(
             $sql,
             [
-                $conn->real_escape_string($add_lot['category']),
-                $conn->real_escape_string($add_lot['name']),
-                $conn->real_escape_string($add_lot['message']),
-                $conn->real_escape_string($add_lot['path']),
-                $conn->real_escape_string($add_lot['startPrice']),
-                $conn->real_escape_string($add_lot['step']),
+                $dbHelper->getEscapeStr($add_lot['category']),
+                $dbHelper->getEscapeStr($add_lot['name']),
+                $dbHelper->getEscapeStr($add_lot['message']),
+                $dbHelper->getEscapeStr($add_lot['path']),
+                $dbHelper->getEscapeStr($add_lot['startPrice']),
+                $dbHelper->getEscapeStr($add_lot['step']),
                 $date_end
             ]
         );
-        $res = mysqli_stmt_execute($stmt);
+        $res = $dbHelper->getID();
 
         if ($res) {
             $result = move_uploaded_file($_FILES['lot']['tmp_name']['photo'], 'img/' . $filename);
-            $lot_id = mysqli_insert_id($conn);
-            header("Location: /lot.php?lot_id=" . $lot_id);
+            header("Location: /lot.php?lot_id=" . $res);
             exit();
         }
 
@@ -88,7 +82,7 @@ else {
             }
         }
 
-        if (stripos(strval(mysqli_error($conn)), 'name')) {
+        if (stripos(strval($dbHelper->getError()), 'name')) {
             $data_html['errors']['name'] = 'Лот с таким наименованием уже существует';
         }
 

@@ -14,7 +14,7 @@
         <div class="form__item<?php if (isset($errors['category'])): ?> form__item--invalid<? endif; ?>">
             <label for="category">Категория</label>
             <select id="category" name="lot[category]" required>
-                <option>Выберите категорию</option>
+                <option value="">Выберите категорию</option>
                 <?php foreach ($submenu as $menu): ?>
                     <option <?php if ($menu['id'] === $values['category']) echo 'selected ' ?>
                             value="<?php echo $menu['id']; ?>"><?php echo htmlspecialchars($menu['name']); ?></option>
