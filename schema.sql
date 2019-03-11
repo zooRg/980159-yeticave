@@ -1,12 +1,12 @@
-CREATE DATABASE yeticave
+CREATE DATABASE yeticave2
   character set utf8
   collate utf8_general_ci;
 
-USE yeticave;
+USE yeticave2;
 
 CREATE TABLE category (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name CHAR(50)
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  name char(255)
 );
 
 CREATE TABLE lot (
@@ -14,7 +14,7 @@ CREATE TABLE lot (
   dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name CHAR(50) NOT NULL UNIQUE,
   description TEXT,
-  img TEXT,
+  img CHAR(255),
   start_price FLOAT(11),
   dt_end TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   step FLOAT(11),

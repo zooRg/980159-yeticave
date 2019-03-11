@@ -1,5 +1,5 @@
 /* Добавляем категории в таблицу */
-INSERT INTO yeticave.category
+INSERT INTO yeticave2.category
   (name)
 VALUES
   ('Доски и лыжи'),
@@ -20,6 +20,7 @@ VALUES
 
 
 /* Добавляем лоты */
+
 INSERT INTO yeticave.lot
 	(dt_add, name, description, img, start_price, dt_end, step, autor_id, vinner_id, category_id)
 VALUES
@@ -101,11 +102,11 @@ VALUES
     (CURRENT_TIMESTAMP - INTERVAL 1 HOUR, '500', 2, 3),
     (CURRENT_TIMESTAMP - INTERVAL 2 HOUR, '500', 2, 3);
 
-SELECT * from yeticave.category;
+SELECT * from yeticave2.category;
 
 /* Получаем самы */
 SELECT y.name, y.start_price, y.img, y.step, c.name AS cat_name
-FROM yeticave.lot y
+FROM yeticave2.lot y
 JOIN category c
 ON y.category_id = c.id
 WHERE y.dt_add < y.dt_end
@@ -114,27 +115,27 @@ LIMIT 3;
 
 /* Получаем лот по его айди и выводим название раздела к какому привязан лот */
 SELECT c.name
-FROM yeticave.lot y
+FROM yeticave2.lot y
 JOIN category c
 ON y.category_id = c.id
 WHERE y.category_id = 2;
 
 /* Получаем лот по айди и меняем название */
-UPDATE yeticave.lot
-SET name = '2014 Rossignol District Snowboard2'
-WHERE id = 2;
+UPDATE yeticave2.lot
+SET name = '2014 Rossignol District Snowboard'
+WHERE id = 1;
 
 /* Получем ставки по айди лота и отсортировав по дате добавления */
 SELECT b.sum_price, name
-FROM yeticave.bets b
-JOIN yeticave.lot y
+FROM yeticave2.bets b
+JOIN yeticave2.lot y
 ON b.lot_id = y.id
 WHERE b.lot_id = 3
 ORDER BY b.dt_add DESC;
 
 SELECT SUM(b.sum_price), name
-FROM yeticave.bets b
-JOIN yeticave.lot y
+FROM yeticave2.bets b
+JOIN yeticave2.lot y
 ON b.lot_id = y.id
 WHERE b.lot_id = 3
 ORDER BY b.dt_add DESC;
