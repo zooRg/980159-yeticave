@@ -20,6 +20,7 @@ VALUES
 
 
 /* Добавляем лоты */
+
 INSERT INTO yeticave.lot
 	(dt_add, name, description, img, start_price, dt_end, step, autor_id, vinner_id, category_id)
 VALUES
@@ -122,7 +123,7 @@ WHERE y.category_id = 2;
 /* Получаем лот по айди и меняем название */
 UPDATE yeticave.lot
 SET name = '2014 Rossignol District Snowboard - test'
-WHERE id = 2;
+WHERE id = 1;
 
 /* Получем ставки по айди лота и отсортировав по дате добавления */
 SELECT b.sum_price, name
