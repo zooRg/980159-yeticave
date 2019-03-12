@@ -121,7 +121,7 @@ WHERE y.category_id = 2;
 
 /* Получаем лот по айди и меняем название */
 UPDATE yeticave.lot
-SET name = '2014 Rossignol District Snowboard2'
+SET name = '2014 Rossignol District Snowboard - test'
 WHERE id = 2;
 
 /* Получем ставки по айди лота и отсортировав по дате добавления */
