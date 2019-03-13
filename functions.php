@@ -46,7 +46,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
                 $type = 'i';
             } elseif (is_string($value)) {
                 $type = 's';
-            } elseif (is_double($value)) {
+            } elseif (is_float($value)) {
                 $type = 'd';
             }
 
@@ -66,14 +66,14 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 }
 
 /**
- * @param $price входная цена для форматирования
+ * @param $price - входная цена для форматирования
  * @return string
  */
 function formatPrice($price)
 {
     $price = number_format(ceil($price), 0, '.', ' ');
 
-    $price = $price . ' ₽';
+    $price .= ' ₽';
 
     return $price;
 }
@@ -105,15 +105,15 @@ function time_format_laps($time)
     $hour = date('G', $time);
     $min = date('i', $time);
     $date = $day . ' ' . $month . ' ' . $year . ' г. в ' . $hour . ':' . $min;
-    $dif = time() - $time;
+    $diff = time() - $time;
     $time_laps = $date;
 
-    if (59 > $dif) {
-        $time_laps = $dif . " сек. назад";
-    } elseif ( 1 < $dif / 60 && 59 > $dif / 60) {
-        $time_laps = round($dif / 60) . " мин. назад";
-    } elseif (1 < $dif / 3600 && 23 > $dif / 3600) {
-        $time_laps = round($dif / 3600) . " час. назад";
+    if (59 > $diff) {
+        $time_laps = $diff . ' сек. назад';
+    } elseif ( 1 < $diff / 60 && 59 > $diff / 60) {
+        $time_laps = round($diff / 60) . ' мин. назад';
+    } elseif (1 < $diff / 3600 && 23 > $diff / 3600) {
+        $time_laps = round($diff / 3600) . ' час. назад';
     }
 
     return $time_laps;
@@ -128,13 +128,10 @@ function time_lot_laps($time)
     date_default_timezone_set('Etc/GMT-3');
     $nowTime = new DateTime('now');
     $tomorTime = new DateTime($time);
+    $date = 'Закончен';
     if ($nowTime->getTimestamp() < $tomorTime->getTimestamp()) {
         $date = $nowTime->diff($tomorTime)->format('%mмес. %dдн. %H:%I:%s');
-    } else {
-        $date = 'Закончен';
     }
 
     return $date;
 }
-
-?>
