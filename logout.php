@@ -1,11 +1,9 @@
 <?php
-require_once('init.php');
+require_once 'init.php';
 
-if ($_SESSION['user'] && $is_auth) {
+if (isset($_SESSION['user'], $is_auth)) {
     unset($_SESSION['user']);
-    header("Location: /index.php");
-} else {
-    header("Location: /index.php");
 }
 
-?>
+header('Location: /index.php');
+

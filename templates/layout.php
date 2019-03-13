@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $title; ?></title>
+    <title><?php echo $title ?? ''; ?></title>
     <link href="css/normalize.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
@@ -25,9 +25,9 @@
             <nav class="user-menu">
 
                 <!-- здесь должен быть PHP код для показа имени пользователя -->
-                <?php if ($is_auth): ?>
+                <?php if (isset($is_auth)): ?>
                     <div class="user-menu__logged">
-                        <p><?php echo $user_name; ?></p>
+                        <p><?php echo $user_name ?? ''; ?></p>
                         <a href="/logout.php">Выход</a>
                     </div>
                 <?php else: ?>
@@ -45,19 +45,19 @@
         </div>
     </header>
 
-    <?php if ($index_page): ?>
+    <?php if (isset($index_page)): ?>
         <nav class="nav">
             <ul class="nav__list container">
                 <?php foreach ($submenu as $menu): ?>
                     <li class="nav__item">
-                        <a href="all-lots.html"><?php echo htmlspecialchars($menu['name']); ?></a>
+                        <a href="all-lots.html"><?php echo htmlspecialchars($menu['name']) ?? ''; ?></a>
                     </li>
                 <?php endforeach; ?>
             </ul>
         </nav>
     <? endif; ?>
 
-    <main<?php if (!$index_page): ?> class="container"<? endif; ?>><?php echo $contents; ?></main>
+    <main<?php if (!isset($index_page)): ?> class="container"<? endif; ?>><?php echo $contents ?? ''; ?></main>
 </div>
 
 <footer class="main-footer">
@@ -66,7 +66,7 @@
             <!--заполните этот список из массива категорий-->
             <?php foreach ($submenu as $menu): ?>
                 <li class="nav__item">
-                    <a href="pages/all-lots.html"><?php echo htmlspecialchars($menu['name']); ?></a>
+                    <a href="pages/all-lots.html"><?php echo htmlspecialchars($menu['name']) ?? ''; ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>

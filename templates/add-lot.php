@@ -7,7 +7,7 @@
             <!-- form__item--invalid -->
             <label for="lot-name">Наименование</label>
             <input id="lot-name" type="text" name="lot[name]" placeholder="Введите наименование лота"
-                   value="<?php echo $values['name']; ?>" required>
+                   value="<?php echo $values['name'] ?? ''; ?>" required>
             <span class="form__error"><?php echo $errors['name'] ?? ''; ?></span>
         </div>
 
@@ -16,8 +16,8 @@
             <select id="category" name="lot[category]" required>
                 <option value="">Выберите категорию</option>
                 <?php foreach ($submenu as $menu): ?>
-                    <option <?php if ($menu['id'] === $values['category']) echo 'selected ' ?>
-                            value="<?php echo $menu['id']; ?>"><?php echo htmlspecialchars($menu['name']); ?></option>
+                    <option <?php if ($menu['id'] === $values['category']) echo 'selected '; ?>
+                            value="<?php echo $menu['id'] ?? ''; ?>"><?php echo htmlspecialchars($menu['name']) ?? ''; ?></option>
                 <?php endforeach; ?>
             </select>
             <span class="form__error"><?php echo $errors['category'] ?? ''; ?></span>
@@ -28,7 +28,7 @@
     <div class="form__item form__item--wide<?php if (isset($errors['message'])): ?> form__item--invalid<? endif; ?>">
         <label for="message">Описание</label>
         <textarea id="message" name="lot[message]" placeholder="Напишите описание лота"
-                  required><?php echo $values['message']; ?></textarea>
+                  required><?php echo $values['message'] ?? ''; ?></textarea>
         <span class="form__error"><?php echo $errors['message'] ?? ''; ?></span>
     </div>
 
@@ -55,26 +55,26 @@
         <div class="form__item form__item--small<?php if (isset($errors['startPrice'])): ?> form__item--invalid<? endif; ?>">
             <label for="lot-rate">Начальная цена</label>
             <input id="lot-rate" type="number" name="lot[startPrice]" placeholder="0"
-                   value="<?php echo $values['startPrice']; ?>" required>
+                   value="<?php echo $values['startPrice'] ?? ''; ?>" required>
             <span class="form__error"><?php echo $errors['startPrice'] ?? ''; ?></span>
         </div>
 
         <div class="form__item form__item--small<?php if (isset($errors['step'])): ?> form__item--invalid<? endif; ?>">
             <label for="lot-step">Шаг ставки</label>
             <input id="lot-step" type="number" name="lot[step]" placeholder="0"
-                   value="<?php echo $values['step']; ?>" required>
+                   value="<?php echo $values['step'] ?? ''; ?>" required>
             <span class="form__error"><?php echo $errors['step'] ?? ''; ?></span>
         </div>
 
         <div class="form__item<?php if (isset($errors['dateEnd'])): ?> form__item--invalid<? endif; ?>">
             <label for="lot-date">Дата окончания торгов</label>
             <input class="form__input-date" id="lot-date" type="date" name="lot[dateEnd]"
-                   value="<?php echo $values['dateEnd']; ?>" required>
+                   value="<?php echo $values['dateEnd'] ?? ''; ?>" required>
             <span class="form__error"><?php echo $errors['dateEnd'] ?? ''; ?></span>
         </div>
 
     </div>
-    <?php if (count($errors)): ?>
+    <?php if (isset($errors)): ?>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <?php endif; ?>
     <button type="submit" class="button">Добавить лот</button>

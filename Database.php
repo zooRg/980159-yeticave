@@ -3,13 +3,13 @@
 class Database
 {
     private $db_connect;
-    private $error = null;
+    private $error;
     private $result;
 
     public function __construct($host, $login, $password, $db)
     {
         $this->db_connect = mysqli_connect($host, $login, $password, $db);
-        mysqli_set_charset($this->db_connect, "utf8");
+        mysqli_set_charset($this->db_connect, 'utf8');
 
         if (!$this->db_connect) {
             $this->error = mysqli_connect_error();
@@ -84,5 +84,3 @@ class Database
         return $this->db_connect->real_escape_string($str);
     }
 }
-
-?>
