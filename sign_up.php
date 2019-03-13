@@ -2,6 +2,7 @@
 require_once 'init.php';
 
 $submenu = '';
+$resID = null;
 $data_form = [];
 $errors = [];
 
@@ -24,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sign['name'] = htmlspecialchars($_POST['registr']['name']);
     $sign['email'] = htmlspecialchars($_POST['registr']['email']);
     $sign['password'] = htmlspecialchars($_POST['registr']['password']);
+    $sign['message'] = htmlspecialchars($_POST['registr']['message']);
     $email_formated = filter_var($sign['email'], FILTER_VALIDATE_EMAIL);
 
     $email = $dbHelper->getEscapeStr($sign['email']);
@@ -40,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['users'] = 'Пользователь с этим email уже зарегистрирован';
     }
 
-    if ($email_formated === true) {
+    if ($email_formated) {
         $sign['path'] = '';
         $password = password_hash($sign['password'], PASSWORD_DEFAULT);
 
@@ -52,16 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = move_uploaded_file($_FILES['registr']['tmp_name']['photo'], 'img/' . $filename);
         }
 
-        $sql = 'INSERT INTO users (dt_registr, email, name, password, avatar) VALUES (NOW(), ?, ?, ?, ?)';
-        $dbHelper->executeQuery($sql, [$sign['email'], $sign['name'], $password, $sign['path']]);
-        $res = $dbHelper->getID();
+        $sql = 'INSERT INTO users (dt_registr, email, name, password, avatar, contacts) VALUES (NOW(), ?, ?, ?, ?, ?)';
+        $dbHelper->executeQuery($sql, [$sign['email'], $sign['name'], $password, $sign['path'], $sign['message']]);
+        $resID = $dbHelper->getID();
 
-        if ($res) {
+        if (0 < $resID) {
             header('Location: /sign_in.php');
             exit();
         }
     }
-    print $dbHelper->getError();
 
     $data_form['values'] = $sign;
     $data_form['errors'] = $errors;

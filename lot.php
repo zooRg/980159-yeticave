@@ -1,16 +1,16 @@
 <?php
 require_once 'init.php';
 
-$submenu = '';
-$lots = '';
-$lotID = '';
+$submenu = null;
+$lots = null;
+$lotID = null;
 $contents = [];
-$cost = '';
-$users = '';
+$cost = null;
+$users = null;
 $error_cost = 'Введите вашу ставку';
 
 if (isset($_GET['lot_id'])) {
-    $lotID = $dbHelper->getEscapeStr(htmlspecialchars($_GET['lot_id']));
+    $lotID = (int)$dbHelper->getEscapeStr(htmlspecialchars($_GET['lot_id']));
 } else {
     http_response_code(404);
     print ('Страница не найдена');
@@ -77,9 +77,8 @@ $step = (int)$lots['step'];
 $end_sum = ceil($start_price + $step);
 
 if (isset($is_auth) && $cost >= $end_sum) {
-    $user_id = $dbHelper->getEscapeStr($_SESSION['user']['id']);
-    $cost = $dbHelper->getEscapeStr($cost);
-    $lotID = $dbHelper->getEscapeStr($lotID);
+    $user_id = (int)$dbHelper->getEscapeStr(htmlspecialchars($_SESSION['user']['id']));
+    $cost = (int)$dbHelper->getEscapeStr(htmlspecialchars($cost));
 
     $sql = 'INSERT INTO bets'
         . ' (dt_add, sum_price, autor_id, lot_id)'
@@ -109,12 +108,13 @@ $contents = include_template('lot.php', [
     'timeLaps'      => time_lot_laps($lots['dt_end']),
     'category_name' => $lots['CATEGORY_NAME'],
     'category_desc' => $lots['description'],
-    'start_price'   => $start_price,
+    'start_price'   => $start_price > 0 ? $start_price : $end_sum,
     'step'          => $end_sum,
     'lot_img'       => $lots['img'],
     'users'         => $users,
     'error_cost'    => $error_cost,
-    'cost'          => $cost
+    'cost'          => $cost,
+    'lotID'         => $lotID
 ]);
 
 $html = include_template('layout.php', [

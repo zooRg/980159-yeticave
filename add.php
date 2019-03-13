@@ -38,15 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($is_auth)) {
     $add_lot['message'] = htmlspecialchars($_POST['lot']['message']);
 
     $add_lot['startPrice'] = $_POST['lot']['startPrice'] > 0
-        ? htmlspecialchars($_POST['lot']['startPrice'])
+        ? (int)htmlspecialchars($_POST['lot']['startPrice'])
         : $data_html['errors']['startPrice'] = $errors['startPrice'];
 
     $add_lot['step'] = $_POST['lot']['step'] > 0
-        ? htmlspecialchars($_POST['lot']['step'])
+        ? (int)htmlspecialchars($_POST['lot']['step'])
         : $data_html['errors']['step'] = $errors['step'];
 
     $add_lot['dateEnd'] = $_POST['lot']['dateEnd'] > 0
-        ? htmlspecialchars($_POST['lot']['dateEnd'])
+        ? (int)htmlspecialchars($_POST['lot']['dateEnd'])
         : $data_html['errors']['dateEnd'] = $errors['dateEnd'];
 
     if (!empty($_FILES['lot']['name']['photo'])) {
