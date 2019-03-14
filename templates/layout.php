@@ -27,7 +27,7 @@
                 <!-- здесь должен быть PHP код для показа имени пользователя -->
                 <?php if (isset($is_auth)): ?>
                     <div class="user-menu__logged">
-                        <p><?php echo $user_name ?? ''; ?></p>
+                        <p><?php echo htmlspecialchars($user_name) ?? ''; ?></p>
                         <a href="/logout.php">Выход</a>
                     </div>
                 <?php else: ?>
@@ -55,9 +55,9 @@
                 <?php endforeach; ?>
             </ul>
         </nav>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <main<?php if (!isset($index_page)): ?> class="container"<? endif; ?>><?php echo $contents ?? ''; ?></main>
+    <main<?php if (!isset($index_page)): ?> class="container"<?php endif; ?>><?php echo $contents ?? ''; ?></main>
 </div>
 
 <footer class="main-footer">
