@@ -10,10 +10,10 @@ $users = null;
 $error_cost = 'Введите вашу ставку';
 
 if (isset($_GET['lot_id'])) {
-    $lotID = (int)$dbHelper->getEscapeStr(htmlspecialchars($_GET['lot_id']));
+    $lotID = (int) $dbHelper->getEscapeStr($_GET['lot_id']);
 } else {
     http_response_code(404);
-    print ('Страница не найдена');
+    print 'Страница не найдена';
     exit();
 }
 
@@ -64,7 +64,7 @@ if (!$dbHelper->getError()) {
 
 if (empty($lots)) {
     http_response_code(404);
-    print ('Страница не найдена');
+    print 'Страница не найдена';
     exit();
 }
 
@@ -77,8 +77,8 @@ $step = (int)$lots['step'];
 $end_sum = ceil($start_price + $step);
 
 if (isset($is_auth) && $cost >= $end_sum) {
-    $user_id = (int)$dbHelper->getEscapeStr(htmlspecialchars($_SESSION['user']['id']));
-    $cost = (int)$dbHelper->getEscapeStr(htmlspecialchars($cost));
+    $user_id = (int)$dbHelper->getEscapeStr($_SESSION['user']['id']);
+    $cost = (int)$dbHelper->getEscapeStr($cost);
 
     $sql = 'INSERT INTO bets'
         . ' (dt_add, sum_price, autor_id, lot_id)'

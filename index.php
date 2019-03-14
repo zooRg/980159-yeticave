@@ -33,7 +33,6 @@ if (!$dbHelper->getError()) {
     $contents = include_template('index.php', [
         'submenu'  => $submenu,
         'adds'     => $adds,
-        'timeLaps' => $timeLaps ?? '',
         'url'      => '/lot.php'
     ]);
 } else {

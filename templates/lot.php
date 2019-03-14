@@ -6,7 +6,7 @@
                 <img src="<?php echo $lot_img ?? ''; ?>" width="730" height="548" alt="Сноуборд">
             </div>
             <p class="lot-item__category">Категория: <span><?php echo htmlspecialchars($category_name) ?? ''; ?></span></p>
-            <p class="lot-item__description"><?php echo htmlspecialchars($category_desc) ?? ''; ?></p>
+            <p class="lot-item__description"><?php echo $category_desc ?? ''; ?></p>
         </div>
         <div class="lot-item__right">
             <?php if (isset($is_auth) && isset($timeLaps)): ?>
