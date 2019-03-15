@@ -104,17 +104,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $cost < $end_sum) {
 
 $contents = include_template('lot.php', [
     'is_auth'       => $is_auth ?? null,
-    'title'         => $lots['name'],
-    'timeLaps'      => time_lot_laps($lots['dt_end']),
-    'category_name' => $lots['CATEGORY_NAME'],
-    'category_desc' => $lots['description'],
+    'title'         => $lots['name'] ?? null,
+    'timeLaps'      => time_lot_laps($lots['dt_end'] ?? null),
+    'category_name' => $lots['CATEGORY_NAME'] ?? null,
+    'category_desc' => $lots['description'] ?? null,
     'start_price'   => $start_price > 0 ? $start_price : $end_sum,
-    'step'          => $end_sum,
-    'lot_img'       => $lots['img'],
-    'users'         => $users,
-    'error_cost'    => $error_cost,
-    'cost'          => $cost,
-    'lotID'         => $lotID
+    'step'          => $end_sum ?? null,
+    'lot_img'       => $lots['img'] ?? null,
+    'users'         => $users ?? null,
+    'error_cost'    => $error_cost ?? null,
+    'cost'          => $cost ?? null,
+    'lotID'         => $lotID ?? null
 ]);
 
 $html = include_template('layout.php', [

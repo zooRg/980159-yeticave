@@ -101,7 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($is_auth)) {
         $data_html['errors']['name'] = 'Лот с таким наименованием уже существует (имя может содержать только буквы и цифры)';
     }
 
-    $add_lot['category'] === $errors['category'] ? $data_html['errors']['category'] = $errors['category'] : null;
+    if ($add_lot['category'] === $errors['category']) {
+        $data_html['errors']['category'] = $errors['category'];
+    }
 
     $data_html['lot'] = $add_lot;
 }
@@ -109,8 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($is_auth)) {
 if (isset($is_auth)) {
     $contents = include_template('add-lot.php', [
         'submenu' => $submenu,
-        'errors'  => $data_html['errors'],
-        'values'  => $data_html['lot']
+        'errors'  => $data_html['errors'] ?? '',
+        'values'  => $data_html['lot'] ?? ''
     ]);
 }
 

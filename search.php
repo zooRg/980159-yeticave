@@ -51,12 +51,12 @@ if (isset($search)) {
 }
 
 $contents = include_template('search_tpl.php', [
-    'lots'        => $lots,
-    'search'      => $search,
-    'count'       => $items_count,
-    'pages'       => $pages,
-    'pages_count' => $pages_count,
-    'cur_page'    => $cur_page
+    'lots'        => $lots ?? null,
+    'search'      => $search ?? null,
+    'count'       => $items_count ?? null,
+    'pages'       => $pages ?? null,
+    'pages_count' => $pages_count ?? null,
+    'cur_page'    => $cur_page ?? null
 ]);
 
 $html = include_template('layout.php', [

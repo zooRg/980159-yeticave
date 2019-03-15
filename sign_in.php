@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data_form['errors'] = $errors;
 }
 
-$contents = include_template('sign_in.php', $data_form);
+$contents = include_template('sign_in.php', $data_form ?? '');
 
 $html = include_template('layout.php', [
     'is_auth'    => $is_auth ?? null,

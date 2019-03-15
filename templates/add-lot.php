@@ -7,20 +7,20 @@
             <!-- form__item--invalid -->
             <label for="lot-name">Наименование</label>
             <input id="lot-name" type="text" name="lot[name]" placeholder="Введите наименование лота"
-                   value="<?php echo htmlspecialchars($values['name']) ?? ''; ?>" required>
-            <span class="form__error"><?php echo htmlspecialchars($errors['name']) ?? ''; ?></span>
+                   value="<?php echo htmlspecialchars($values['name'] ?? ''); ?>" required>
+            <span class="form__error"><?php echo htmlspecialchars($errors['name'] ?? ''); ?></span>
         </div>
 
         <div class="form__item<?php if (isset($errors['category'])): ?> form__item--invalid<?php endif; ?>">
             <label for="category">Категория</label>
             <select id="category" name="lot[category]" required>
                 <option value="">Выберите категорию</option>
-                <?php foreach ($submenu as $menu): ?>
-                    <option <?php if ($menu['id'] === $values['category']) echo 'selected '; ?>
-                            value="<?php echo $menu['id'] ?? ''; ?>"><?php echo htmlspecialchars($menu['name']) ?? ''; ?></option>
+                <?php foreach ($submenu as $key => $menu): ?>
+                    <option <?php if ($menu['id'] === $values['category'] && isset($values) && isset($menu)) echo "selected "; ?>
+                            value="<?php echo htmlspecialchars($menu['id'] ?? ''); ?>"><?php echo htmlspecialchars($menu['name'] ?? ''); ?></option>
                 <?php endforeach; ?>
             </select>
-            <span class="form__error"><?php echo htmlspecialchars($errors['category']) ?? ''; ?></span>
+            <span class="form__error"><?php echo htmlspecialchars($errors['category'] ?? ''); ?></span>
         </div>
 
     </div>
@@ -28,8 +28,8 @@
     <div class="form__item form__item--wide<?php if (isset($errors['message'])): ?> form__item--invalid<?php endif; ?>">
         <label for="message">Описание</label>
         <textarea id="message" name="lot[message]" placeholder="Напишите описание лота"
-                  required><?php echo htmlspecialchars($values['message']) ?? ''; ?></textarea>
-        <span class="form__error"><?php echo htmlspecialchars($errors['message']) ?? ''; ?></span>
+                  required><?php echo htmlspecialchars($values['message'] ?? ''); ?></textarea>
+        <span class="form__error"><?php echo htmlspecialchars($errors['message'] ?? ''); ?></span>
     </div>
 
     <div class="form__item form__item--file<?php if (isset($errors['path'])): ?> form__item--invalid<?php endif; ?>">
@@ -46,7 +46,7 @@
             <label for="photo2">
                 <span>+ Добавить</span>
             </label>
-            <span class="form__error"><?php echo htmlspecialchars($errors['path']) ?? ''; ?></span>
+            <span class="form__error"><?php echo htmlspecialchars($errors['path'] ?? ''); ?></span>
         </div>
     </div>
 
@@ -56,21 +56,21 @@
             <label for="lot-rate">Начальная цена</label>
             <input id="lot-rate" type="number" name="lot[startPrice]" placeholder="0"
                    value="<?php echo htmlspecialchars($values['startPrice']) ?? ''; ?>" required>
-            <span class="form__error"><?php echo htmlspecialchars($errors['startPrice']) ?? ''; ?></span>
+            <span class="form__error"><?php echo htmlspecialchars($errors['startPrice'] ?? ''); ?></span>
         </div>
 
         <div class="form__item form__item--small<?php if (isset($errors['step'])): ?> form__item--invalid<?php endif; ?>">
             <label for="lot-step">Шаг ставки</label>
             <input id="lot-step" type="number" name="lot[step]" placeholder="0"
-                   value="<?php echo htmlspecialchars($values['step']) ?? ''; ?>" required>
-            <span class="form__error"><?php echo htmlspecialchars($errors['step']) ?? ''; ?></span>
+                   value="<?php echo htmlspecialchars($values['step'] ?? ''); ?>" required>
+            <span class="form__error"><?php echo htmlspecialchars($errors['step'] ?? ''); ?></span>
         </div>
 
         <div class="form__item<?php if (isset($errors['dateEnd'])): ?> form__item--invalid<?php endif; ?>">
             <label for="lot-date">Дата окончания торгов</label>
             <input class="form__input-date" id="lot-date" type="date" name="lot[dateEnd]"
-                   value="<?php echo htmlspecialchars($values['dateEnd']) ?? ''; ?>" required>
-            <span class="form__error"><?php echo htmlspecialchars($errors['dateEnd']) ?? ''; ?></span>
+                   value="<?php echo htmlspecialchars($values['dateEnd'] ?? ''); ?>" required>
+            <span class="form__error"><?php echo htmlspecialchars($errors['dateEnd'] ?? ''); ?></span>
         </div>
 
     </div>

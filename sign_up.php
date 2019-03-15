@@ -69,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $contents = include_template('registr.php', [
-    'values' => $data_form['values'],
-    'errors' => $data_form['errors']
+    'values' => $data_form['values'] ?? '',
+    'errors' => $data_form['errors'] ?? ''
 ]);
 
 $html = include_template('layout.php', [

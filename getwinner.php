@@ -16,7 +16,7 @@ if (isset($_SESSION['user'], $is_auth)) {
         . ' WHERE l.dt_end <= current_date() AND l.vinner_id IS NULL'
         . ' ORDER BY b.dt_add DESC';
     $dbHelper->executeQuery($sqlUsers);
-    $bets = $dbHelper->getResultArray()[0];
+    $bets = $dbHelper->getResultArray()[0] ?? '';
 
     if (isset($bets) && 0 < $dbHelper->getNumRows()) {
         $dbHelper->executeQuery('UPDATE lot SET vinner_id = ' . $bets['autor_id'] . ' WHERE id = ' . $bets['id']);
