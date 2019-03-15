@@ -7,31 +7,31 @@
         <!-- form__item--invalid -->
         <label for="email">E-mail*</label>
         <input id="email" type="text" name="registr[email]" placeholder="Введите e-mail"
-               value="<?php echo $values['email'] ?? ''; ?>" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+               value="<?php echo htmlspecialchars($values['email']) ?? ''; ?>" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                required>
-        <span class="form__error"><?php echo isset($errors['users']) ? $errors['users'] : $errors['email']; ?></span>
+        <span class="form__error"><?php echo isset($errors['users']) ? htmlspecialchars($errors['users']) : htmlspecialchars($errors['email']); ?></span>
     </div>
 
     <div class="form__item<?php if (isset($errors['password'])): ?> form__item--invalid<?php endif; ?>">
         <label for="password">Пароль*</label>
         <input id="password" type="text" name="registr[password]" placeholder="Введите пароль"
-               value="<?php echo $values['password'] ?? ''; ?>" required>
-        <span class="form__error"><?php echo $errors['password'] ?? ''; ?></span>
+               value="<?php echo htmlspecialchars($values['password']) ?? ''; ?>" required>
+        <span class="form__error"><?php echo htmlspecialchars($errors['password']) ?? ''; ?></span>
     </div>
 
     <div class="form__item<?php if (isset($errors['name'])): ?> form__item--invalid<?php endif; ?>">
         <label for="name">Имя*</label>
         <input id="name" type="text" name="registr[name]" placeholder="Введите имя"
-               value="<?php echo $values['name'] ?? ''; ?>" required>
-        <span class="form__error"><?php echo $errors['name'] ?? ''; ?></span>
+               value="<?php echo htmlspecialchars($values['name']) ?? ''; ?>" required>
+        <span class="form__error"><?php echo htmlspecialchars($errors['name']) ?? ''; ?></span>
     </div>
 
     <div class="form__item<?php if (isset($errors['message'])): ?> form__item--invalid<?php endif; ?>">
         <label for="message">Контактные данные*</label>
         <textarea id="message" name="registr[message]"
                   placeholder="Напишите как с вами связаться"
-                  required><?php echo $values['message'] ?? ''; ?></textarea>
-        <span class="form__error"><?php echo $errors['message'] ?? ''; ?></span>
+                  required><?php echo htmlspecialchars($values['message']) ?? ''; ?></textarea>
+        <span class="form__error"><?php echo htmlspecialchars($errors['message']) ?? ''; ?></span>
     </div>
 
     <div class="form__item form__item--file form__item--last">
