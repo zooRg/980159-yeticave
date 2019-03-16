@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ALL);
 require_once 'functions.php';
 require_once 'Database.php';
 
