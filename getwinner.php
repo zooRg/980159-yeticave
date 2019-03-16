@@ -39,9 +39,10 @@ if (isset($_SESSION['user'], $is_auth)) {
         $message->setBcc($user['email']);
 
         $msg_content = include_template('email.php', [
-            'user_name' => $user['name'],
-            'lot_link'  => 'http://localhost/lot.php?lot_id=' . $bets['id'],
-            'lot_name'  => $bets['name'],
+            'user_name' => $user['name'] ?? '',
+            'lot_link'  => 'http://localhost/lot.php?lot_id=' . $bets['id'] ?? '',
+            'my_lots'  => 'http://localhost/my-lots.php',
+            'lot_name'  => $bets['name'] ?? '',
         ]);
         $message->setBody($msg_content, 'text/html');
 

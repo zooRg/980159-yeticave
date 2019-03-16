@@ -1,5 +1,5 @@
 <section class="lot-item container">
-    <h2><?php echo htmlspecialchars($title) ?? ''; ?></h2>
+    <h2><?php echo htmlspecialchars($title ?? ''); ?></h2>
     <div class="lot-item__content">
         <div class="lot-item__left">
             <div class="lot-item__image">
@@ -9,7 +9,7 @@
             <p class="lot-item__description"><?php echo htmlspecialchars($category_desc ?? ''); ?></p>
         </div>
         <div class="lot-item__right">
-            <?php if (isset($is_auth) && isset($timeLaps)): ?>
+            <?php if (isset($is_auth) && $timeLaps !== 'Закончен'): ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
                         <?php echo $timeLaps ?? ''; ?>
@@ -17,10 +17,10 @@
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?php echo htmlspecialchars(formatPrice($start_price ?? '')); ?></span>
+                            <span class="lot-item__cost"><?php echo formatPrice($start_price ?? ''); ?></span>
                         </div>
                         <div class="lot-item__min-cost">
-                            Мин. ставка <span><?php echo htmlspecialchars(formatPrice($step) ?? ''); ?></span>
+                            Мин. ставка <span><?php echo formatPrice($step) ?? ''; ?></span>
                         </div>
                     </div>
                     <form class="lot-item__form" action="/lot.php?lot_id=<?php echo $lotID ?? '' ?>" method="post">
@@ -39,8 +39,8 @@
                     </div>
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
-                            <span class="lot-item__amount">Выйграла цена</span>
-                            <span class="lot-item__cost"><?php echo htmlspecialchars(formatPrice($start_price ?? '')); ?></span>
+                            <span class="lot-item__amount">Выйграла ставка</span>
+                            <span class="lot-item__cost"><?php echo formatPrice($start_price ?? ''); ?></span>
                         </div>
                     </div>
                 </div>
@@ -49,18 +49,22 @@
                     <p class="form__error">Что бы сделать ставку пожалуйста авторизуйтесь</p>
                 </div>
             <?php endif; ?>
-            <div class="history">
-                <h3>История ставок (<span><?php echo count($users) ?? '' ?></span>)</h3>
-                <table class="history__list">
-                    <?php foreach ($users as $user): ?>
-                        <tr class="history__item">
-                            <td class="history__name"><?php echo htmlspecialchars($user['name'] ?? ''); ?></td>
-                            <td class="history__price"><?php echo htmlspecialchars(formatPrice($user['sum_price'] ?? '')); ?></td>
-                            <td class="history__time"><?php echo htmlspecialchars(time_format_laps(strtotime($user['dt_add'] ?? ''))); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            </div>
+            <?php if($timeLaps !== 'Закончен'): ?>
+                <div class="history">
+                    <h3>История ставок (<span><?php echo count($users) ?? '' ?></span>)</h3>
+                    <table class="history__list">
+                        <?php if (isset($users)): ?>
+                            <?php foreach ($users as $user): ?>
+                                <tr class="history__item">
+                                    <td class="history__name"><?php echo htmlspecialchars($user['name'] ?? ''); ?></td>
+                                    <td class="history__price"><?php echo formatPrice($user['sum_price'] ?? ''); ?></td>
+                                    <td class="history__time"><?php echo time_format_laps(strtotime($user['dt_add'] ?? '')); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>

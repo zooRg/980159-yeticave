@@ -11,7 +11,7 @@ if ($dbHelper->getError()) {
     exit();
 }
 
-$dbHelper->executeQuery('SELECT id, name AS name FROM category');
+$dbHelper->executeQuery('SELECT name, id FROM category');
 
 if (!$dbHelper->getError()) {
     $submenu = $dbHelper->getResultArray();
@@ -22,13 +22,13 @@ if (!$dbHelper->getError()) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $sign['name'] = htmlspecialchars($_POST['registr']['name']);
-    $sign['email'] = htmlspecialchars($_POST['registr']['email']);
-    $sign['password'] = htmlspecialchars($_POST['registr']['password']);
-    $sign['message'] = htmlspecialchars($_POST['registr']['message']);
+    $sign['name'] = htmlspecialchars($_POST['registr']['name'] ?? null);
+    $sign['email'] = htmlspecialchars($_POST['registr']['email'] ?? null);
+    $sign['password'] = htmlspecialchars($_POST['registr']['password'] ?? null);
+    $sign['message'] = htmlspecialchars($_POST['registr']['message'] ?? null);
     $email_formated = filter_var($sign['email'], FILTER_VALIDATE_EMAIL);
 
-    $email = $dbHelper->getEscapeStr($sign['email']);
+    $email = $dbHelper->getEscapeStr($sign['email'] ?? null);
 
     $sql = "SELECT id FROM users WHERE email = '$email'";
     $dbHelper->executeQuery($sql);
@@ -69,17 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $contents = include_template('registr.php', [
-    'values' => $data_form['values'] ?? '',
-    'errors' => $data_form['errors'] ?? ''
+    'values' => $data_form['values'] ?? null,
+    'errors' => $data_form['errors'] ?? null
 ]);
 
 $html = include_template('layout.php', [
     'is_auth'    => $is_auth ?? null,
     'user_name'  => $user_name ?? null,
     'title'      => 'YetiCave - Регистрация',
-    'submenu'    => $submenu,
+    'submenu'    => $submenu ?? null,
     'index_page' => 'non',
-    'contents'   => $contents
+    'contents'   => $contents ?? null
 ]);
 
 print($html);

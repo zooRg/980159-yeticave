@@ -4,13 +4,14 @@ require_once 'getwinner.php';
 
 $submenu = '';
 $contents = '';
+$adds = '';
 
 if ($dbHelper->getError()) {
     print $dbHelper->getError();
     exit();
 }
 
-$dbHelper->executeQuery('SELECT `name` AS name FROM category');
+$dbHelper->executeQuery('SELECT name, id FROM category');
 
 if (!$dbHelper->getError()) {
     $submenu = $dbHelper->getResultArray();
@@ -31,9 +32,8 @@ if (!$dbHelper->getError()) {
     $adds = $dbHelper->getResultArray();
 
     $contents = include_template('index.php', [
-        'submenu'  => $submenu,
-        'adds'     => $adds,
-        'url'      => '/lot.php'
+        'submenu'  => $submenu ?? '',
+        'adds'     => $adds ?? ''
     ]);
 } else {
     print $dbHelper->getError();
@@ -44,8 +44,8 @@ $html = include_template('layout.php', [
     'is_auth'   => $is_auth ?? null,
     'user_name' => $user_name ?? null,
     'title'     => 'Главная - YetiCave',
-    'submenu'   => $submenu,
-    'contents'  => $contents
+    'submenu'   => $submenu ?? '',
+    'contents'  => $contents ?? ''
 ]);
 
 print($html);

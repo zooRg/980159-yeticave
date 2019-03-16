@@ -9,7 +9,7 @@
         <input id="email" type="text" name="registr[email]" placeholder="Введите e-mail"
                value="<?php echo htmlspecialchars($values['email'] ?? ''); ?>" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                required>
-        <span class="form__error"><?php echo isset($errors['users']) ? htmlspecialchars($errors['users']) : htmlspecialchars($errors['email']); ?></span>
+        <span class="form__error"><?php echo isset($errors['users']) ? htmlspecialchars($errors['users'] ?? '') : htmlspecialchars($errors['email'] ?? ''); ?></span>
     </div>
 
     <div class="form__item<?php if (isset($errors['password'])): ?> form__item--invalid<?php endif; ?>">
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <?php if (isset($errors)): ?>
+    <?php if (!empty($errors)): ?>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <?php endif; ?>
 

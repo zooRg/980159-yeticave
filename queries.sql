@@ -137,5 +137,5 @@ SELECT SUM(b.sum_price), name
 FROM yeticave.bets b
 JOIN yeticave.lot y
 ON b.lot_id = y.id
-WHERE b.lot_id = 3
+WHERE b.lot_id = 1
 ORDER BY b.dt_add DESC;

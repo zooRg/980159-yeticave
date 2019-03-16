@@ -10,7 +10,7 @@ if ($dbHelper->getError()) {
     exit();
 }
 
-$dbHelper->executeQuery('SELECT id, name AS name FROM category');
+$dbHelper->executeQuery('SELECT name, id FROM category');
 
 if (!$dbHelper->getError()) {
     $submenu = $dbHelper->getResultArray();
@@ -20,10 +20,10 @@ if (!$dbHelper->getError()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $sign['password'] = htmlspecialchars($_POST['password']);
-    $sign['email'] = htmlspecialchars($_POST['email']);
+    $sign['password'] = htmlspecialchars($_POST['password'] ?? null);
+    $sign['email'] = htmlspecialchars($_POST['email'] ?? null);
 
-    $email = $dbHelper->getEscapeStr($sign['email']);
+    $email = $dbHelper->getEscapeStr($sign['email'] ?? null);
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $dbHelper->executeQuery($sql);
     $user = $dbHelper->getResultArray()[0] ?? null;
@@ -49,15 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data_form['errors'] = $errors;
 }
 
-$contents = include_template('sign_in.php', $data_form ?? '');
+$contents = include_template('sign_in.php', $data_form ?? null);
 
 $html = include_template('layout.php', [
     'is_auth'    => $is_auth ?? null,
     'user_name'  => $user_name ?? null,
     'title'      => 'YetiCave - вход на сайт',
-    'submenu'    => $submenu,
+    'submenu'    => $submenu ?? null,
     'index_page' => 'non',
-    'contents'   => $contents
+    'contents'   => $contents ?? null
 ]);
 
 print($html);

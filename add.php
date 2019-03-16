@@ -23,7 +23,7 @@ if ($dbHelper->getError()) {
     exit();
 }
 
-$dbHelper->executeQuery('SELECT id, name AS name FROM category');
+$dbHelper->executeQuery('SELECT name, id FROM category');
 
 if (!$dbHelper->getError()) {
     $submenu = $dbHelper->getResultArray();
@@ -33,9 +33,16 @@ if (!$dbHelper->getError()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($is_auth)) {
-    $add_lot['category'] = (int)htmlspecialchars($_POST['lot']['category']);
-    $add_lot['name'] = htmlspecialchars($_POST['lot']['name']);
-    $add_lot['message'] = htmlspecialchars($_POST['lot']['message']);
+
+    $add_lot['category'] = (int)htmlspecialchars($_POST['lot']['category']
+        ?? $data_html['errors']['category'] = $errors['category']);
+
+    $add_lot['name'] = htmlspecialchars($_POST['lot']['name']
+        ? htmlspecialchars($_POST['lot']['name'])
+        : $data_html['errors']['name'] = $errors['name']);
+
+    $add_lot['message'] = htmlspecialchars($_POST['lot']['message']
+        ?? $data_html['errors']['message'] = $errors['message']);
 
     $add_lot['startPrice'] = $_POST['lot']['startPrice'] > 0
         ? (int)htmlspecialchars($_POST['lot']['startPrice'])
@@ -45,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($is_auth)) {
         ? (int)htmlspecialchars($_POST['lot']['step'])
         : $data_html['errors']['step'] = $errors['step'];
 
-    $add_lot['dateEnd'] = $_POST['lot']['dateEnd'] > 0
-        ? (int)htmlspecialchars($_POST['lot']['dateEnd'])
+    $add_lot['dateEnd'] = $_POST['lot']['dateEnd']
+        ? htmlspecialchars($_POST['lot']['dateEnd'])
         : $data_html['errors']['dateEnd'] = $errors['dateEnd'];
 
     if (!empty($_FILES['lot']['name']['photo'])) {
@@ -60,35 +67,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($is_auth)) {
         . ' VALUES'
         . ' (NOW(), ?, 1, ?, ?, ?, ?, ?, ?)';
 
-    $date_end = date('Y-m-d H:i:s', strtotime(htmlspecialchars($add_lot['dateEnd'])));
-    $date_now = date('Y-m-d H:i:s');
+    date_default_timezone_set('Etc/GMT-3');
+    $date_now = new DateTime('now');
+    $date_end = new DateTime(intval($add_lot['dateEnd']) ? $add_lot['dateEnd'] : 'now');
+    $date = $date_end->diff($date_now)->days;
+    $date_summ = $date_end->getTimestamp() - $date_now->getTimestamp();
+    $date_summ = round($date_summ / 3600 / 24);
 
-    if ($date_end < $date_now && $date_end - $date_now === 0) {
-        $data_html['errors']['dateEnd'] = 'Дата должна быть не меньше текущей и не позднеее текущего года';
+    if ($date_summ <= 0 || $date > 60) {
+        $data_html['errors']['dateEnd'] = 'Дата должна быть не меньше текущей и не позднеее 2 месяцев';
     }
 
-    if (!isset($add_lot['category'])) {
-        $data_html['errors']['category'] = $errors['category'];
-    }
+    if ($date < 60 && $date_summ > 0
+        && isset(
+            $_POST['lot']['dateEnd'],
+            $_POST['lot']['category'],
+            $_POST['lot']['name'],
+            $_POST['lot']['message'],
+            $_POST['lot']['startPrice'],
+            $_POST['lot']['step'])
+    ) {
+        $dbHelper->executeQuery(
+            $sql,
+            [
+                $dbHelper->getEscapeStr($add_lot['category']),
+                $dbHelper->getEscapeStr($add_lot['name']),
+                $dbHelper->getEscapeStr($add_lot['message']),
+                $dbHelper->getEscapeStr($add_lot['path']),
+                $dbHelper->getEscapeStr($add_lot['startPrice']),
+                $dbHelper->getEscapeStr($add_lot['step']),
+                $date_end->format('Y-m-d H:i:s')
+            ]
+        );
+        $res = $dbHelper->getID() ?? null;
 
-    $dbHelper->executeQuery(
-        $sql,
-        [
-            $dbHelper->getEscapeStr($add_lot['category']),
-            $dbHelper->getEscapeStr($add_lot['name']),
-            $dbHelper->getEscapeStr($add_lot['message']),
-            $dbHelper->getEscapeStr($add_lot['path']),
-            $dbHelper->getEscapeStr($add_lot['startPrice']),
-            $dbHelper->getEscapeStr($add_lot['step']),
-            $date_end
-        ]
-    );
-    $res = $dbHelper->getID();
-
-    if ($res) {
-        $result = move_uploaded_file($_FILES['lot']['tmp_name']['photo'], 'img/' . $filename);
-        header('Location: /lot.php?lot_id=' . $res);
-        exit();
+        if ($res) {
+            $result = move_uploaded_file($_FILES['lot']['tmp_name']['photo'], 'img/' . $filename);
+            header('Location: /lot.php?lot_id=' . $res);
+            exit();
+        }
     }
 
     foreach ($errors as $key => $err) {

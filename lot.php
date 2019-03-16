@@ -3,6 +3,7 @@ require_once 'init.php';
 
 $submenu = null;
 $lots = null;
+$lot = null;
 $lotID = null;
 $contents = [];
 $cost = null;
@@ -22,8 +23,7 @@ if ($dbHelper->getError()) {
     exit();
 }
 
-$sqlCat = 'SELECT `name` AS name FROM category';
-$dbHelper->executeQuery($sqlCat);
+$dbHelper->executeQuery('SELECT name, id FROM category');
 
 if (!$dbHelper->getError()) {
     $submenu = $dbHelper->getResultArray();
@@ -41,7 +41,7 @@ $dbHelper->executeQuery($sqlLots);
 
 if (!$dbHelper->getError()) {
     $lot = $dbHelper->getResultArray();
-    $lots = $lot[0];
+    $lots = $lot[0] ?? '';
 } else {
     print $dbHelper->getError();
     exit();
@@ -69,12 +69,12 @@ if (empty($lots)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && is_numeric($_POST['cost'])) {
-    $cost = (int)$_POST['cost'];
+    $cost = (int)$dbHelper->getEscapeStr($_POST['cost']);
 }
 
-$start_price = $users[0]['sum_price'];
+$start_price = $users[0]['sum_price'] ?? 0;
 $step = (int)$lots['step'];
-$end_sum = ceil($start_price + $step);
+$end_sum = ceil($start_price + $step) ?? '';
 
 if (isset($is_auth) && $cost >= $end_sum) {
     $user_id = (int)$dbHelper->getEscapeStr($_SESSION['user']['id']);
@@ -120,10 +120,10 @@ $contents = include_template('lot.php', [
 $html = include_template('layout.php', [
     'is_auth'    => $is_auth ?? null,
     'user_name'  => $user_name ?? null,
-    'title'      => 'YetiCave - ' . $lots['name'],
-    'submenu'    => $submenu,
+    'title'      => 'YetiCave - ' . $lots['name'] ?? null,
+    'submenu'    => $submenu ?? null,
     'index_page' => 'non',
-    'contents'   => $contents
+    'contents'   => $contents ?? null
 ]);
 
 print($html);

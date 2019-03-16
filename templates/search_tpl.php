@@ -1,7 +1,7 @@
 <div class="container">
     <section class="lots">
-        <?php if (isset($lots)): ?>
-            <h2>Результатов «<?php echo $count; ?>» по запросу «<span><?php echo $search ?? ''; ?></span>»</h2>
+        <?php if (isset($lots, $count, $search) && 0 < $count): ?>
+            <h2>Результатов «<?php echo $count ?? ''; ?>» по запросу «<span><?php echo $search ?? ''; ?></span>»</h2>
             <ul class="lots__list">
                 <?php foreach ($lots as $lot): ?>
                     <li class="lots__item lot">
@@ -10,16 +10,23 @@
                                  alt="<?php echo htmlspecialchars($lot['name'] ?? ''); ?>">
                         </div>
                         <div class="lot__info">
-                            <span class="lot__category"><?php echo $lot['category_name']; ?></span>
-                            <h3 class="lot__title"><a class="text-link" href="lot.php?lot_id=<?php echo htmlspecialchars($lot['id'] ?? ''); ?>"><?php echo htmlspecialchars($lot['name'] ?? ''); ?></a>
+                            <span class="lot__category">
+                                <?php echo htmlspecialchars($lot['category_name'] ?? ''); ?>
+                            </span>
+                            <h3 class="lot__title">
+                                <a class="text-link" href="lot.php?lot_id=<?php echo htmlspecialchars($lot['id'] ?? ''); ?>">
+                                    <?php echo htmlspecialchars($lot['name'] ?? ''); ?>
+                                </a>
                             </h3>
                             <div class="lot__state">
                                 <div class="lot__rate">
                                     <span class="lot__amount">Стартовая цена</span>
-                                    <span class="lot__cost"><?php echo htmlspecialchars(formatPrice($lot['start_price']) ?? ''); ?></span>
+                                    <span class="lot__cost">
+                                        <?php echo formatPrice($lot['start_price'] ?? ''); ?>
+                                    </span>
                                 </div>
                                 <div class="lot__timer timer">
-                                    <?php echo time_lot_laps($lot['dt_end']) ?? ''; ?>
+                                    <?php echo time_lot_laps($lot['dt_end'] ?? ''); ?>
                                 </div>
                             </div>
                         </div>
@@ -30,7 +37,7 @@
             <h2>Ничего не найдено по вашему запросу</h2>
         <?php endif; ?>
     </section>
-    <?php if ($pages_count > 1): ?>
+    <?php if (isset($pages_count, $search, $cur_page, $pages) && $pages_count > 1): ?>
         <ul class="pagination-list">
             <li class="pagination-item pagination-item-prev">
                 <a href="/search.php?search=<?php echo htmlspecialchars($search ?? ''); ?>&find=Найти&page=<?php echo $cur_page <= 1 ? count($pages) : $cur_page - 1; ?>">Назад</a>

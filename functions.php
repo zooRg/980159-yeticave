@@ -123,7 +123,7 @@ function time_format_laps($time)
  * @param $time - входящая дата в формате в 2019-03-06 17:12:05
  * @return string
  */
-function time_lot_laps($time)
+function time_lot_laps($time, $only_time = null)
 {
     date_default_timezone_set('Etc/GMT-3');
     $nowTime = new DateTime('now');
@@ -131,7 +131,9 @@ function time_lot_laps($time)
     $date = 'Закончен';
     if ($nowTime->getTimestamp() < $tomorTime->getTimestamp()) {
         $date = $nowTime->diff($tomorTime)->format('%mмес. %dдн. %H:%I:%s');
+        if (isset($only_time)) {
+            $date = $nowTime->diff($tomorTime)->format('%H:%I:%s');
+        }
     }
-
     return $date;
 }

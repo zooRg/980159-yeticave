@@ -2,9 +2,9 @@
 require_once 'init.php';
 
 $submenu = '';
-$items_count = '';
-$pages = '';
-$pages_count = '';
+$items_count = 0;
+$pages = 0;
+$pages_count = 0;
 $lots = [];
 
 if ($dbHelper->getError()) {
@@ -12,7 +12,7 @@ if ($dbHelper->getError()) {
     exit();
 }
 
-$dbHelper->executeQuery('SELECT `name` AS name FROM category');
+$dbHelper->executeQuery('SELECT name, id FROM category');
 
 if (!$dbHelper->getError()) {
     $submenu = $dbHelper->getResultArray();
@@ -21,8 +21,8 @@ if (!$dbHelper->getError()) {
     exit();
 }
 
-$search = $dbHelper->getEscapeStr($_GET['search']) ?? '';
-$cur_page = $_GET['page'] ?? 1;
+$search = $dbHelper->getEscapeStr($_GET['search'] ?? '');
+$cur_page = $dbHelper->getEscapeStr($_GET['page'] ?? 1);
 $search = htmlspecialchars($search);
 $page_items = 3;
 
@@ -31,7 +31,7 @@ if (isset($search)) {
         . ' FROM lot'
         . ' WHERE MATCH(name, description) AGAINST(?)';
     $dbHelper->executeQuery($sql, [$search]);
-    $items_count = $dbHelper->getResultArray()[0]['cnt'];
+    $items_count = $dbHelper->getResultArray()[0]['cnt'] ?? '';
 
     $pages_count = ceil($items_count / $page_items);
     $offset = ($cur_page - 1) * $page_items;
@@ -44,7 +44,7 @@ if (isset($search)) {
         . ' ON lot.category_id = category.id'
         . ' WHERE MATCH(lot.name, description) AGAINST(?)'
         . ' GROUP BY lot.name'
-        . ' LIMIT ' . $page_items . ' OFFSET ' . $offset . '';
+        . ' LIMIT ' . $page_items . ' OFFSET ' . $offset;
 
     $dbHelper->executeQuery($sql, [$search]);
     $lots = $dbHelper->getResultArray();
@@ -63,9 +63,9 @@ $html = include_template('layout.php', [
     'is_auth'    => $is_auth ?? null,
     'user_name'  => $user_name ?? null,
     'title'      => 'YetiCave - поиск по сайту',
-    'submenu'    => $submenu,
+    'submenu'    => $submenu ?? '',
     'index_page' => 'non',
-    'contents'   => $contents
+    'contents'   => $contents ?? ''
 ]);
 
 print($html);

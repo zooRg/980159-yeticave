@@ -15,10 +15,14 @@
             <label for="category">Категория</label>
             <select id="category" name="lot[category]" required>
                 <option value="">Выберите категорию</option>
-                <?php foreach ($submenu as $key => $menu): ?>
-                    <option <?php if ($menu['id'] === $values['category'] && isset($values) && isset($menu)) echo "selected "; ?>
-                            value="<?php echo htmlspecialchars($menu['id'] ?? ''); ?>"><?php echo htmlspecialchars($menu['name'] ?? ''); ?></option>
-                <?php endforeach; ?>
+                <?php if (isset($submenu, $values)): ?>
+                    <?php foreach ($submenu as $key => $menu): ?>
+                        <option <?php if (isset($values['category']) && $menu['id'] === $values['category']): ?>selected<?php endif; ?>
+                                value="<?php echo htmlspecialchars($menu['id'] ?? ''); ?>">
+                            <?php echo htmlspecialchars($menu['name'] ?? ''); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </select>
             <span class="form__error"><?php echo htmlspecialchars($errors['category'] ?? ''); ?></span>
         </div>
@@ -55,7 +59,7 @@
         <div class="form__item form__item--small<?php if (isset($errors['startPrice'])): ?> form__item--invalid<?php endif; ?>">
             <label for="lot-rate">Начальная цена</label>
             <input id="lot-rate" type="number" name="lot[startPrice]" placeholder="0"
-                   value="<?php echo htmlspecialchars($values['startPrice']) ?? ''; ?>" required>
+                   value="<?php echo htmlspecialchars($values['startPrice'] ?? ''); ?>" required>
             <span class="form__error"><?php echo htmlspecialchars($errors['startPrice'] ?? ''); ?></span>
         </div>
 
@@ -74,7 +78,7 @@
         </div>
 
     </div>
-    <?php if (isset($errors)): ?>
+    <?php if (!empty($errors)): ?>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <?php endif; ?>
     <button type="submit" class="button">Добавить лот</button>

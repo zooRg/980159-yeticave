@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($title) ?? ''; ?></title>
+    <title><?php echo htmlspecialchars($title ?? ''); ?></title>
     <link href="css/normalize.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
@@ -25,9 +25,10 @@
             <nav class="user-menu">
 
                 <!-- здесь должен быть PHP код для показа имени пользователя -->
-                <?php if (isset($is_auth)): ?>
+                <?php if (isset($is_auth, $user_name)): ?>
                     <div class="user-menu__logged">
-                        <p><?php echo htmlspecialchars($user_name) ?? ''; ?></p>
+                        <p><?php echo htmlspecialchars($user_name ?? ''); ?></p>
+                        <a href="/my-lots.php">Мои ставки</a>
                         <a href="/logout.php">Выход</a>
                     </div>
                 <?php else: ?>
@@ -45,30 +46,41 @@
         </div>
     </header>
 
-    <?php if (isset($index_page)): ?>
-        <nav class="nav">
-            <ul class="nav__list container">
-                <?php foreach ($submenu as $menu): ?>
-                    <li class="nav__item">
-                        <a href="all-lots.html"><?php echo htmlspecialchars($menu['name']) ?? ''; ?></a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </nav>
+    <?php if (!isset($index_page)): ?>
+        <main class="container"><?php echo $contents ?? ''; ?></main>
+    <?php else: ?>
+        <main>
+            <nav class="nav">
+                <ul class="nav__list container">
+                    <?php if (isset($submenu)): ?>
+                        <?php foreach ($submenu as $menu): ?>
+                            <li class="nav__item">
+                                <a href="/all-lots.php?category_id=<?php echo htmlspecialchars($menu['id'] ?? ''); ?>">
+                                    <?php echo htmlspecialchars($menu['name'] ?? ''); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+            <div class="container"><?php echo $contents ?? ''; ?></div>
+        </main>
     <?php endif; ?>
-
-    <main<?php if (!isset($index_page)): ?> class="container"<?php endif; ?>><?php echo $contents ?? ''; ?></main>
 </div>
 
 <footer class="main-footer">
     <nav class="nav">
         <ul class="nav__list container">
             <!--заполните этот список из массива категорий-->
-            <?php foreach ($submenu as $menu): ?>
-                <li class="nav__item">
-                    <a href="pages/all-lots.html"><?php echo htmlspecialchars($menu['name']) ?? ''; ?></a>
-                </li>
-            <?php endforeach; ?>
+            <?php if (isset($submenu)): ?>
+                <?php foreach ($submenu as $menu): ?>
+                    <li class="nav__item">
+                        <a href="/all-lots.php?category_id=<?php echo htmlspecialchars($menu['id'] ?? ''); ?>">
+                            <?php echo htmlspecialchars($menu['name'] ?? ''); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </ul>
     </nav>
     <div class="main-footer__bottom container">
