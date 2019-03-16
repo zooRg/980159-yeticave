@@ -58,9 +58,6 @@ if (isset($_SESSION['user'])) {
         'bets'          => $bets ?? null,
     ]);
 }
-echo "<pre>";
-print_r($bets);
-echo "</pre>";
 
 $html = include_template('layout.php', [
     'is_auth'     => $is_auth ?? null,
